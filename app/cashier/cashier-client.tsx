@@ -563,9 +563,9 @@ const CashierClient = () => {
               </div>
 
               {/* Receipt ID display */}
-              <div className="bg-blue-50 px-4 py-3 rounded border border-blue-200">
+              <div className="bg-[var(--brand-pink-300)] px-4 py-3 rounded border border-[var(--brand-pink-300)]">
                 <p className="text-xs text-muted-foreground font-semibold">Receipt Number</p>
-                <p className="text-lg font-mono font-bold text-blue-600">ID will be generated</p>
+                <p className="text-lg font-mono font-bold text-[var(--brand-pink-600)]">ID will be generated</p>
               </div>
 
               {/* Customer Info */}

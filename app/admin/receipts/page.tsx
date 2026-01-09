@@ -152,7 +152,7 @@ export default function ReceiptsPage() {
                           className={`inline-flex px-2 py-1 rounded-full text-xs font-medium ${
                             sale.paymentMethod === "cash"
                               ? "bg-green-100/20 text-green-700"
-                              : "bg-blue-100/20 text-blue-700"
+                              : "bg-[var(--brand-pink-300)]/20 text-[var(--brand-pink-600)]"
                           }`}
                         >
                           {sale.paymentMethod === "cash" ? "Cash" : "Mobile Money"}

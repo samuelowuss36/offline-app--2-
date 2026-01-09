@@ -1,5 +1,6 @@
 "use client"
 
+import Logo from "@/components/ui/logo"
 import { CheckCircle } from "lucide-react"
 
 interface ReceiptItem {
@@ -25,16 +26,15 @@ interface ReceiptProps {
 
 export default function ReceiptDisplay({
   receiptId,
-  storeName = "Mother Care & Kids",
+  storeName = "Owoabenes Mothercare & Kids Boutique",
   items,
   subtotal,
-  tax = 0,
   total,
   amountReceived,
   change,
   paymentMethod,
   dateTime,
-  cashierName = "Cashier",
+  cashierName = "Benedicta Sarpong",
 }: ReceiptProps) {
   const receiptDate = dateTime || new Date().toLocaleString()
 
@@ -42,21 +42,22 @@ export default function ReceiptDisplay({
     <div className="w-full flex justify-center p-4">
       <div className="w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden print:shadow-none print:rounded-none">
         {/* Header with Accent Line */}
-        <div className="bg-gradient-to-r from-slate-900 to-slate-800 text-white p-8 border-b-4 border-blue-500">
+        <div className="bg-gradient-to-r from-[var(--brand-pink)] to-[var(--brand-pink-600)] text-white p-8 border-b-4 border-[var(--brand-pink)]">
           <div className="text-center">
-            <div className="inline-block mb-3 p-3 bg-blue-500 rounded-full">
-              <CheckCircle className="w-6 h-6 text-white" />
+            <div className="inline-block mb-3 p-1 bg-white rounded-full shadow-lg">
+              <img src="public/logo.jpeg" alt="Logo" />
             </div>
-            <h1 className="text-2xl font-bold tracking-tight mb-1">{storeName}</h1>
+            <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-1 brand-font text-primary">{storeName}</h1>
             <p className="text-xs text-slate-300 uppercase tracking-widest font-semibold">Official Receipt</p>
+            <p className="text-sm text-slate-200 italic">Quality care for mothers & kids</p>
           </div>
         </div>
 
         {/* Receipt ID - Prominent */}
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-8 py-6 border-b-2 border-blue-100">
+        <div className="bg-gradient-to-r from-[var(--brand-pink-300)] to-white px-8 py-6 border-b-2 border-[var(--brand-pink-300)]">
           <div className="text-center">
             <p className="text-xs text-slate-600 font-semibold uppercase tracking-wider mb-2">Receipt Number</p>
-            <p className="text-3xl font-black font-mono text-blue-600 tracking-tight">{receiptId}</p>
+            <p className="text-3xl font-black font-mono text-[var(--brand-pink-600)] tracking-tight">{receiptId}</p>
           </div>
         </div>
 
@@ -103,12 +104,12 @@ export default function ReceiptDisplay({
             <span className="text-sm font-mono font-semibold text-slate-800">GHS {subtotal.toFixed(2)}</span>
           </div>
 
-          {tax > 0 && (
+          {/* {tax > 0 && (
             <div className="flex justify-between items-center">
               <span className="text-sm text-slate-600 font-medium">Tax</span>
               <span className="text-sm font-mono font-semibold text-slate-800">GHS {tax.toFixed(2)}</span>
             </div>
-          )}
+          )} */}
 
           <div className="flex justify-between items-center pt-3 border-t border-slate-300">
             <span className="text-base font-bold text-slate-900">Total</span>
@@ -119,9 +120,9 @@ export default function ReceiptDisplay({
         {/* Payment Details */}
         <div className="px-8 py-5 space-y-4 border-b border-slate-200">
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-blue-50 rounded-xl p-4 border border-blue-200">
+            <div className="bg-[var(--brand-pink-300)] rounded-xl p-4 border border-[var(--brand-pink-300)]">
               <p className="text-xs text-slate-600 font-semibold uppercase tracking-wide mb-2">Amount Paid</p>
-              <p className="text-lg font-black font-mono text-blue-600">GHS {amountReceived.toFixed(2)}</p>
+              <p className="text-lg font-black font-mono text-[var(--brand-pink-600)]">GHS {amountReceived.toFixed(2)}</p>
             </div>
             <div className="bg-green-50 rounded-xl p-4 border border-green-200">
               <p className="text-xs text-slate-600 font-semibold uppercase tracking-wide mb-2">Change</p>
@@ -137,9 +138,11 @@ export default function ReceiptDisplay({
 
         {/* Footer */}
         <div className="px-8 py-6 text-center space-y-2 bg-white">
-          <p className="text-sm font-bold text-slate-900">✓ Thank You!</p>
+          <p className="text-sm font-bold text-slate-900 brand-font">✓ Thank You for Your Purchase!</p>
           <p className="text-xs text-slate-500">Keep this receipt for your records</p>
           <p className="text-xs text-slate-400 pt-2 border-t border-slate-200 mt-3">Valid proof of purchase</p>
+          <p className="text-xs text-slate-400 pt-2 border-t border-slate-200 mt-3">Items Purchased are non-refundable!</p>
+          <p className="text-xs text-slate-400 pt-2 border-t border-slate-200 mt-3">Tel: 0548 048 520</p>
         </div>
       </div>
     </div>

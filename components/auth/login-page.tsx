@@ -9,6 +9,8 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import LoadingOverlay from "@/components/ui/loading-overlay"
+import Logo from "@/components/ui/logo"
 import { AlertCircle } from "lucide-react"
 
 export default function LoginPage() {
@@ -41,9 +43,15 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-primary to-primary/80 p-4">
+      {loading && <LoadingOverlay text={"Owoabenes Mothercare & Kids Boutique"} />}
       <Card className="w-full max-w-md">
+        <div className="flex justify-center -mt-10">
+          <div className="bg-white p-5 rounded-full shadow-md">
+            <img src="public/logo.jpeg" alt="Logo" />
+          </div>
+        </div>
         <CardHeader className="space-y-2 text-center">
-          <CardTitle className="text-3xl font-bold text-primary">Mother Care & Kids</CardTitle>
+          <CardTitle className="text-3xl font-bold text-primary brand-font">Owoabenes Mothercare & Kids Boutique</CardTitle>
           <CardDescription>Professional POS System</CardDescription>
           <p className="text-sm text-muted-foreground">Offline Boutique Management</p>
         </CardHeader>
@@ -88,7 +96,7 @@ export default function LoginPage() {
               {loading ? "Logging in..." : "Login"}
             </Button>
 
-            <div className="space-y-2 border-t pt-4 text-sm text-muted-foreground">
+            {/* <div className="space-y-2 border-t pt-4 text-sm text-muted-foreground">
               <p className="font-semibold text-foreground">Demo Credentials:</p>
               <div>
                 <p>Admin:</p>
@@ -98,7 +106,7 @@ export default function LoginPage() {
                 <p>Cashier:</p>
                 <code className="rounded bg-muted px-2 py-1 text-xs">cashier / cashier123</code>
               </div>
-            </div>
+            </div> */}
           </form>
         </CardContent>
       </Card>

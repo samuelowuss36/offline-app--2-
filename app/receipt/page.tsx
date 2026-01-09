@@ -43,7 +43,7 @@ export default function ReceiptPage() {
         <div className="flex justify-center print:hidden">
           <Button
             onClick={handlePrint}
-            className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold rounded-xl px-8 py-3 flex items-center gap-2 shadow-lg hover:shadow-xl transition-all"
+            className="bg-gradient-to-r from-[var(--brand-pink)] to-[var(--brand-pink-600)] hover:from-[var(--brand-pink-600)] hover:to-[var(--brand-pink-600)] text-white font-bold rounded-xl px-8 py-3 flex items-center gap-2 shadow-lg hover:shadow-xl transition-all"
           >
             <Printer className="w-5 h-5" />
             Print Receipt

@@ -27,6 +27,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { Plus, Trash2, Edit2, AlertTriangle, Trash } from "lucide-react"
+import LoadingOverlay from "@/components/ui/loading-overlay"
 import { useToast } from "@/hooks/use-toast"
 
 const MOTHERCARE_CATEGORIES = [
@@ -46,6 +47,7 @@ export default function InventoryPage() {
   const { toast } = useToast()
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
   const [isAddingProduct, setIsAddingProduct] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
@@ -99,6 +101,7 @@ export default function InventoryPage() {
 
     if (!validateForm()) return
 
+    setSaving(true)
     try {
       const wholesalePrice = Number.parseFloat(formData.wholesalePrice)
       const retailPrice = Number.parseFloat(formData.retailPrice)
@@ -165,6 +168,8 @@ export default function InventoryPage() {
         description: "Failed to save product. Please try again.",
         variant: "destructive",
       })
+    } finally {
+      setSaving(false)
     }
   }
 
@@ -218,6 +223,7 @@ export default function InventoryPage() {
 
   return (
     <div className="space-y-6 p-8">
+      {saving && <LoadingOverlay text={"Owoabenes Mothercare & Kids Boutique"} /> }
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Inventory Management</h1>
@@ -345,8 +351,8 @@ export default function InventoryPage() {
                 </div>
 
                 {formData.wholesalePrice && formData.retailPrice && (
-                  <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-                    <p className="text-sm text-blue-700">
+                  <div className="p-3 bg-[var(--brand-pink-300)] rounded-lg border border-[var(--brand-pink-300)]">
+                    <p className="text-sm text-[var(--brand-pink-600)]">
                       <strong>Profit per unit:</strong> GHS{" "}
                       {(Number.parseFloat(formData.retailPrice) - Number.parseFloat(formData.wholesalePrice)).toFixed(
                         2,
@@ -380,8 +386,8 @@ export default function InventoryPage() {
                 </div>
 
                 <div className="flex gap-3 pt-4">
-                  <Button type="submit" className="bg-primary hover:bg-primary/90">
-                    {editingId ? "Update" : "Add"} Product
+                  <Button type="submit" className="bg-primary hover:bg-primary/90" disabled={saving}>
+                    {saving ? (editingId ? "Updating..." : "Adding...") : editingId ? "Update" : "Add"} Product
                   </Button>
                   <Button
                     type="button"

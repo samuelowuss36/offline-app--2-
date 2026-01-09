@@ -1,6 +1,7 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
+import Logo from "@/components/ui/logo"
 import { getSession } from "@/lib/auth"
 import { LogOut, Clock } from "lucide-react"
 import { useEffect, useState } from "react"
@@ -26,9 +27,15 @@ export function TopBar({ userRole, onLogout }: TopBarProps) {
 
   return (
     <div className="bg-card border-b border-border shadow-sm px-6 py-4 flex items-center justify-between">
-      <div>
-        <h1 className="text-2xl font-bold text-primary">Mother Care & Kids</h1>
-        <p className="text-sm text-muted-foreground">{userRole === "admin" ? "Admin Dashboard" : "Cashier Terminal"}</p>
+      <div className="flex items-center gap-4">
+        <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center p-1 shadow-sm">
+          {/* <Logo size={36} className="rounded-full" /> */}
+          <img src="public/logo.jpeg" alt="Logo" />
+        </div>
+        <div>
+          <h1 className="text-2xl font-bold text-primary">Owoabenes Mothercare & Kids Boutique</h1>
+          <p className="text-sm text-muted-foreground">{userRole === "admin" ? "Admin Dashboard" : "Cashier Terminal"}</p>
+        </div>
       </div>
 
       <div className="flex items-center gap-6">
