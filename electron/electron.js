@@ -4,14 +4,8 @@ import isDev from "electron-is-dev"
 import fs from "fs"
 import os from "os"
 import { fileURLToPath } from "url"
-const electron = await import('electron')
 
-async function start() {
-  const { app, BrowserWindow } = await import('electron')
-}
-start()
-
-
+// Required for ESM
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
@@ -39,7 +33,9 @@ function createWindow() {
     icon: path.join(__dirname, "icon.ico"),
   })
 
-  const startUrl = isProduction ? `file://${path.join(__dirname, "../.next/server/app.html")}` : "http://localhost:3000"
+  const startUrl = isProduction
+    ? `file://${path.join(__dirname, "../.next/server/app.html")}`
+    : "http://localhost:3000"
 
   mainWindow.loadURL(startUrl)
 
@@ -52,23 +48,22 @@ function createWindow() {
   })
 }
 
-// App event listeners
-app.on("ready", createWindow)
+// App lifecycle
+app.whenReady().then(() => {
+  createWindow()
+  createMenu()
+})
 
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit()
-  }
+  if (process.platform !== "darwin") app.quit()
 })
 
 app.on("activate", () => {
-  if (mainWindow === null) {
-    createWindow()
-  }
+  if (BrowserWindow.getAllWindows().length === 0) createWindow()
 })
 
 // Menu
-const createMenu = () => {
+function createMenu() {
   const template = [
     {
       label: "File",
@@ -76,9 +71,7 @@ const createMenu = () => {
         {
           label: "Exit",
           accelerator: "CmdOrCtrl+Q",
-          click: () => {
-            app.quit()
-          },
+          click: () => app.quit(),
         },
       ],
     },
@@ -98,9 +91,7 @@ const createMenu = () => {
       submenu: [
         {
           label: "About",
-          click: () => {
-            // About dialog
-          },
+          click: () => {},
         },
       ],
     },
@@ -109,13 +100,6 @@ const createMenu = () => {
   Menu.setApplicationMenu(Menu.buildFromTemplate(template))
 }
 
-app.on("ready", createMenu)
-
-// IPC handlers for database operations
-ipcMain.handle("get-db-path", () => {
-  return dbDir
-})
-
-ipcMain.handle("get-app-data-path", () => {
-  return path.join(os.homedir(), ".possystem111")
-})
+// IPC
+ipcMain.handle("get-db-path", () => dbDir)
+ipcMain.handle("get-app-data-path", () => dbDir)

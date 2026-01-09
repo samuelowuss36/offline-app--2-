@@ -1,6 +1,5 @@
 import { contextBridge, ipcRenderer } from "electron"
 
-contextBridge.exposeInMainWorld("electronAPI", {
+contextBridge.exposeInMainWorld("api", {
   getDbPath: () => ipcRenderer.invoke("get-db-path"),
-  getAppDataPath: () => ipcRenderer.invoke("get-app-data-path"),
 })

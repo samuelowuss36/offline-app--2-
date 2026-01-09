@@ -4,7 +4,7 @@
   "private": true,
   "homepage": "./",
   "type": "module",
-  "main": "public/electron.js",
+  "main": "electron/electron.js",
   "scripts": {
     "build": "next build",
     "dev": "next dev",
@@ -88,6 +88,7 @@
     "appId": "com.possystem.app",
     "productName": "Mother Care & Kids POS",
     "files": [
+      "electron/**/*",
       "public/**/*",
       ".next/**/*",
       "node_modules/**/*",
