@@ -20,7 +20,8 @@ jobs:
         run: npm install
 
       - name: Build EXE
-        run: npm run electron-build -- --win
+        run: npx electron-builder --win --x64
+
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4

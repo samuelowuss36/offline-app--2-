@@ -85,7 +85,7 @@
     "wait-on": "^7.0.1"
   },
   "build": {
-    "publish": "never",
+    "publish": "null",
     "appId": "com.possystem.app",
     "productName": "Mother Care & Kids POS",
     "files": [
