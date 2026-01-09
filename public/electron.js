@@ -4,6 +4,13 @@ import isDev from "electron-is-dev"
 import fs from "fs"
 import os from "os"
 import { fileURLToPath } from "url"
+const electron = await import('electron')
+
+async function start() {
+  const { app, BrowserWindow } = await import('electron')
+}
+start()
+
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
