@@ -9,17 +9,19 @@ export interface AuthSession {
 const SESSION_KEY = "pos_session"
 
 export function setSession(session: AuthSession): void {
-  localStorage.setItem(SESSION_KEY, JSON.stringify(session))
+  // Use sessionStorage so session clears when app/browser is closed
+  sessionStorage.setItem(SESSION_KEY, JSON.stringify(session))
 }
 
 export function getSession(): AuthSession | null {
   if (typeof window === "undefined") return null
-  const data = localStorage.getItem(SESSION_KEY)
+  // Use sessionStorage so session clears when app/browser is closed
+  const data = sessionStorage.getItem(SESSION_KEY)
   return data ? JSON.parse(data) : null
 }
 
 export function clearSession(): void {
-  localStorage.removeItem(SESSION_KEY)
+  sessionStorage.removeItem(SESSION_KEY)
 }
 
 export async function validateLogin(username: string, password: string): Promise<AuthSession | null> {
