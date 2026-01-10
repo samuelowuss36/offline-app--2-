@@ -47,7 +47,7 @@ export default function LoginPage() {
       <Card className="w-full max-w-md">
         <div className="flex justify-center -mt-10">
           <div className="bg-white p-5 rounded-full shadow-md">
-            <img src="public/logo.jpeg" alt="Logo" />
+            <img src="/logo.jpeg" alt="Logo" className="w-16 h-16 object-contain" />
           </div>
         </div>
         <CardHeader className="space-y-2 text-center">

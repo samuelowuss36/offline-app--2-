@@ -28,9 +28,8 @@ export function TopBar({ userRole, onLogout }: TopBarProps) {
   return (
     <div className="bg-card border-b border-border shadow-sm px-6 py-4 flex items-center justify-between">
       <div className="flex items-center gap-4">
-        <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center p-1 shadow-sm">
-          {/* <Logo size={36} className="rounded-full" /> */}
-          <img src="public/logo.jpeg" alt="Logo" />
+        <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center p-1 shadow-sm overflow-hidden">
+          <img src="/logo.jpeg" alt="Logo" className="w-full h-full object-contain rounded-full" />
         </div>
         <div>
           <h1 className="text-2xl font-bold text-primary">Owoabenes Mothercare & Kids Boutique</h1>

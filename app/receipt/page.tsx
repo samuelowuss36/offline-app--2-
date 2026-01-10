@@ -61,14 +61,21 @@ export default function ReceiptPage() {
 
       {/* Print Styles */}
       <style jsx global>{`
+        @page { size: 80mm auto; margin: 4mm; }
         @media print {
           body {
             background: white !important;
             margin: 0 !important;
             padding: 0 !important;
           }
-          .print\\:hidden {
+          .print\:hidden {
             display: none !important;
+          }
+          /* ensure receipt fits POS-80 width */
+          #receipt-container, #print-area {
+            width: 80mm !important;
+            max-width: 80mm !important;
+            margin: 0 auto !important;
           }
         }
       `}</style>

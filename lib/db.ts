@@ -1,5 +1,5 @@
 // IndexedDB wrapper for offline data persistence
-interface Product {
+export interface Product {
   id: string
   name: string
   sku: string
@@ -13,7 +13,7 @@ interface Product {
   createdAt: number
 }
 
-interface Customer {
+export interface Customer {
   id: string
   name: string
   phone: string
@@ -23,7 +23,7 @@ interface Customer {
   createdAt: number
 }
 
-interface SaleItem {
+export interface SaleItem {
   productId: string
   productName: string
   quantity: number
@@ -33,7 +33,7 @@ interface SaleItem {
   itemProfit?: number
 }
 
-interface Sale {
+export interface Sale {
   id: string
   customerId?: string
   items: SaleItem[]
@@ -48,7 +48,7 @@ interface Sale {
   createdAt: number
 }
 
-interface User {
+export interface User {
   id: string
   username: string
   password: string
@@ -62,43 +62,69 @@ const DB_VERSION = 1
 let db: IDBDatabase | null = null
 
 export async function initDB(): Promise<IDBDatabase> {
+  // Check if IndexedDB is available
+  if (typeof indexedDB === "undefined") {
+    throw new Error("IndexedDB is not available in this environment")
+  }
+
+  // If already initialized, return existing connection
+  if (db) {
+    return db
+  }
+
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, DB_VERSION)
+    try {
+      const request = indexedDB.open(DB_NAME, DB_VERSION)
 
-    request.onerror = () => reject(request.error)
-    request.onsuccess = () => {
-      db = request.result
-      resolve(db)
-    }
-
-    request.onupgradeneeded = (event) => {
-      const database = (event.target as IDBOpenDBRequest).result
-
-      // Products
-      if (!database.objectStoreNames.contains("products")) {
-        const productStore = database.createObjectStore("products", { keyPath: "id" })
-        productStore.createIndex("sku", "sku", { unique: true })
-        productStore.createIndex("category", "category", { unique: false })
+      request.onerror = () => {
+        console.error("[v0] IndexedDB open error:", request.error)
+        reject(request.error || new Error("Failed to open IndexedDB"))
+      }
+      
+      request.onsuccess = () => {
+        db = request.result
+        console.log("[v0] IndexedDB initialized successfully")
+        resolve(db)
       }
 
-      // Customers
-      if (!database.objectStoreNames.contains("customers")) {
-        const customerStore = database.createObjectStore("customers", { keyPath: "id" })
-        customerStore.createIndex("phone", "phone", { unique: true })
+      request.onblocked = () => {
+        console.warn("[v0] IndexedDB blocked - close other tabs using this database")
+        reject(new Error("Database blocked - please close other tabs"))
       }
 
-      // Sales
-      if (!database.objectStoreNames.contains("sales")) {
-        const salesStore = database.createObjectStore("sales", { keyPath: "id" })
-        salesStore.createIndex("createdAt", "createdAt", { unique: false })
-        salesStore.createIndex("customerId", "customerId", { unique: false })
-      }
+      request.onupgradeneeded = (event) => {
+        console.log("[v0] IndexedDB upgrade needed, creating object stores...")
+        const database = (event.target as IDBOpenDBRequest).result
 
-      // Users
-      if (!database.objectStoreNames.contains("users")) {
-        const userStore = database.createObjectStore("users", { keyPath: "id" })
-        userStore.createIndex("username", "username", { unique: true })
+        // Products
+        if (!database.objectStoreNames.contains("products")) {
+          const productStore = database.createObjectStore("products", { keyPath: "id" })
+          productStore.createIndex("sku", "sku", { unique: true })
+          productStore.createIndex("category", "category", { unique: false })
+        }
+
+        // Customers
+        if (!database.objectStoreNames.contains("customers")) {
+          const customerStore = database.createObjectStore("customers", { keyPath: "id" })
+          customerStore.createIndex("phone", "phone", { unique: true })
+        }
+
+        // Sales
+        if (!database.objectStoreNames.contains("sales")) {
+          const salesStore = database.createObjectStore("sales", { keyPath: "id" })
+          salesStore.createIndex("createdAt", "createdAt", { unique: false })
+          salesStore.createIndex("customerId", "customerId", { unique: false })
+        }
+
+        // Users
+        if (!database.objectStoreNames.contains("users")) {
+          const userStore = database.createObjectStore("users", { keyPath: "id" })
+          userStore.createIndex("username", "username", { unique: true })
+        }
       }
+    } catch (error) {
+      console.error("[v0] Error initializing IndexedDB:", error)
+      reject(error)
     }
   })
 }

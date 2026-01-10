@@ -11,7 +11,7 @@ export default function Logo({
   className?: string
   alt?: string
 }) {
-  const [src, setSrc] = useState("/logo.png")
+  const [src, setSrc] = useState("/logo.jpeg")
 
   return (
     <img

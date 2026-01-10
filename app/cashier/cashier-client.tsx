@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,6 +9,7 @@ import { X, Minus, Plus, ShoppingCart, Printer, Search, AlertCircle } from "luci
 import { cn } from "@/lib/utils"
 import { getProducts, addSale } from "@/lib/db"
 import { useToast } from "@/hooks/use-toast"
+import ReceiptDisplay from "@/components/receipt/receipt-display"
 
 const CashierClient = () => {
   const { toast } = useToast()
@@ -24,6 +25,17 @@ const CashierClient = () => {
   const [processingPayment, setProcessingPayment] = useState(false)
   const [showReceiptPreview, setShowReceiptPreview] = useState(false)
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({})
+  const [printSale, setPrintSale] = useState<{
+    id: string
+    items: any[]
+    subtotal: number
+    total: number
+    amountReceived: number
+    change: number
+    paymentMethod: string
+    dateTime: string
+    cashierName: string
+  } | null>(null)
 
   useEffect(() => {
     loadProducts()
@@ -148,92 +160,446 @@ const CashierClient = () => {
         variant: "default",
       })
 
-      const printWindow = window.open("", "", "height=600,width=800")
+      const printWindow = window.open("", "", "height=800,width=600")
       if (printWindow) {
+        const storeName = "Owoabenes Mothercare & Kids Boutique"
+        const receiptDate = new Date().toLocaleString()
+        const cashierName = "Benedicta Sarpong"
+        const displayPaymentMethod = paymentMethod === "cash" ? "Cash" : "Mobile Money"
+        const displayAmountReceived = paymentMethod === "cash" ? amountReceived : total
+        const displayChange = paymentMethod === "cash" ? change : 0
+        
+        // Get absolute URL for logo
+        const logoUrl = `${window.location.origin}/logo.jpeg`
+
         const receiptHTML = `
           <!DOCTYPE html>
           <html>
             <head>
               <title>Receipt #${saleId}</title>
               <style>
-                body { font-family: Arial, sans-serif; padding: 20px; background: white; }
-                .receipt { max-width: 400px; margin: 0 auto; border: 1px solid #ccc; padding: 20px; }
-                .header { text-align: center; border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 10px; }
-                .receipt-id { text-align: center; font-size: 18px; font-weight: bold; margin: 10px 0; font-family: monospace; }
-                .customer-info { font-size: 12px; margin: 10px 0; }
-                .items { margin: 15px 0; border-bottom: 1px dashed #ccc; padding-bottom: 10px; }
-                .item { display: flex; justify-content: space-between; margin: 5px 0; font-size: 12px; }
-                .totals { margin: 15px 0; font-size: 12px; }
-                .total-line { display: flex; justify-content: space-between; font-weight: bold; font-size: 14px; margin-top: 10px; }
-                .footer { text-align: center; font-size: 11px; margin-top: 20px; border-top: 1px solid #ccc; padding-top: 10px; }
-                @media print { body { background: white; } }
+                * { margin: 0; padding: 0; box-sizing: border-box; }
+                body {
+                  font-family: 'Segoe UI', Arial, sans-serif;
+                  background: #f5f5f5;
+                  padding: 20px;
+                }
+                .receipt-container {
+                  max-width: 400px;
+                  margin: 0 auto;
+                  background: white;
+                  border-radius: 24px;
+                  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+                  overflow: hidden;
+                }
+                .header {
+                  background: linear-gradient(to right, #ec4899, #db2777);
+                  color: white;
+                  padding: 32px;
+                  text-align: center;
+                  border-bottom: 4px solid #ec4899;
+                }
+                .logo-container {
+                  display: inline-block;
+                  margin-bottom: 12px;
+                  padding: 4px;
+                  background: white;
+                  border-radius: 50%;
+                  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+                }
+                .logo {
+                  width: 64px;
+                  height: 64px;
+                  object-fit: contain;
+                }
+                .store-name {
+                  font-size: 24px;
+                  font-weight: 800;
+                  letter-spacing: -0.025em;
+                  margin-bottom: 4px;
+                  color: #be185d;
+                }
+                .subtitle {
+                  font-size: 12px;
+                  color: #cbd5e1;
+                  text-transform: uppercase;
+                  letter-spacing: 0.1em;
+                  font-weight: 600;
+                }
+                .tagline {
+                  font-size: 14px;
+                  color: #e2e8f0;
+                  font-style: italic;
+                }
+                .receipt-id-section {
+                  background: linear-gradient(to right, #fbcfe8, white);
+                  padding: 24px 32px;
+                  text-align: center;
+                  border-bottom: 2px solid #fbcfe8;
+                }
+                .receipt-label {
+                  font-size: 12px;
+                  color: #475569;
+                  font-weight: 600;
+                  text-transform: uppercase;
+                  letter-spacing: 0.05em;
+                  margin-bottom: 8px;
+                }
+                .receipt-number {
+                  font-size: 28px;
+                  font-weight: 900;
+                  font-family: monospace;
+                  color: #be185d;
+                  letter-spacing: -0.025em;
+                }
+                .transaction-details {
+                  padding: 20px 32px;
+                  border-bottom: 1px solid #e2e8f0;
+                }
+                .customer-section {
+                  padding: 16px 32px;
+                  background: #fef3c7;
+                  border-bottom: 1px solid #fcd34d;
+                }
+                .customer-title {
+                  font-size: 12px;
+                  color: #92400e;
+                  font-weight: 600;
+                  text-transform: uppercase;
+                  letter-spacing: 0.05em;
+                  margin-bottom: 8px;
+                }
+                .customer-name {
+                  font-size: 16px;
+                  font-weight: 700;
+                  color: #78350f;
+                  margin-bottom: 4px;
+                }
+                .customer-phone {
+                  font-size: 14px;
+                  color: #92400e;
+                  font-family: monospace;
+                }
+                .detail-row {
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-bottom: 12px;
+                }
+                .detail-row:last-child { margin-bottom: 0; }
+                .detail-label {
+                  font-size: 12px;
+                  color: #475569;
+                  font-weight: 500;
+                }
+                .detail-value {
+                  font-size: 14px;
+                  font-family: monospace;
+                  color: #1e293b;
+                }
+                .items-section {
+                  padding: 24px 32px;
+                  border-bottom: 1px solid #e2e8f0;
+                }
+                .item {
+                  margin-bottom: 16px;
+                }
+                .item:last-child { margin-bottom: 0; }
+                .item-header {
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: flex-start;
+                }
+                .item-name {
+                  font-size: 14px;
+                  font-weight: 600;
+                  color: #0f172a;
+                  flex: 1;
+                }
+                .item-total {
+                  font-size: 14px;
+                  font-family: monospace;
+                  font-weight: 700;
+                  color: #0f172a;
+                  margin-left: 12px;
+                }
+                .item-details {
+                  font-size: 12px;
+                  color: #64748b;
+                  margin-top: 4px;
+                }
+                .divider {
+                  padding: 12px 32px;
+                }
+                .dashed-line {
+                  border-top: 2px dashed #cbd5e1;
+                }
+                .totals-section {
+                  padding: 20px 32px;
+                  background: #f8fafc;
+                  border-bottom: 1px solid #e2e8f0;
+                }
+                .total-row {
+                  display: flex;
+                  justify-content: space-between;
+                  align-items: center;
+                  margin-bottom: 12px;
+                }
+                .total-row:last-child { margin-bottom: 0; }
+                .total-label {
+                  font-size: 14px;
+                  color: #475569;
+                  font-weight: 500;
+                }
+                .total-value {
+                  font-size: 14px;
+                  font-family: monospace;
+                  font-weight: 600;
+                  color: #1e293b;
+                }
+                .grand-total {
+                  padding-top: 12px;
+                  border-top: 1px solid #cbd5e1;
+                }
+                .grand-total .total-label {
+                  font-size: 16px;
+                  font-weight: 700;
+                  color: #0f172a;
+                }
+                .grand-total .total-value {
+                  font-size: 24px;
+                  font-weight: 900;
+                  color: #0f172a;
+                }
+                .payment-section {
+                  padding: 20px 32px;
+                  border-bottom: 1px solid #e2e8f0;
+                }
+                .payment-grid {
+                  display: grid;
+                  grid-template-columns: 1fr 1fr;
+                  gap: 16px;
+                  margin-bottom: 16px;
+                }
+                .payment-box {
+                  border-radius: 12px;
+                  padding: 16px;
+                  border: 1px solid;
+                }
+                .payment-box.pink {
+                  background: #fdf2f8;
+                  border-color: #fbcfe8;
+                }
+                .payment-box.green {
+                  background: #f0fdf4;
+                  border-color: #bbf7d0;
+                }
+                .payment-box-label {
+                  font-size: 12px;
+                  color: #475569;
+                  font-weight: 600;
+                  text-transform: uppercase;
+                  letter-spacing: 0.05em;
+                  margin-bottom: 8px;
+                }
+                .payment-box-value {
+                  font-size: 18px;
+                  font-weight: 900;
+                  font-family: monospace;
+                }
+                .payment-box.pink .payment-box-value { color: #be185d; }
+                .payment-box.green .payment-box-value { color: #16a34a; }
+                .payment-method-box {
+                  background: linear-gradient(to right, #1e293b, #0f172a);
+                  border-radius: 12px;
+                  padding: 16px;
+                  color: white;
+                }
+                .payment-method-label {
+                  font-size: 12px;
+                  font-weight: 600;
+                  text-transform: uppercase;
+                  letter-spacing: 0.05em;
+                  margin-bottom: 8px;
+                  opacity: 0.8;
+                }
+                .payment-method-value {
+                  font-size: 16px;
+                  font-weight: 700;
+                  text-transform: capitalize;
+                }
+                .footer {
+                  padding: 24px 32px;
+                  text-align: center;
+                  background: white;
+                }
+                .thank-you {
+                  font-size: 14px;
+                  font-weight: 700;
+                  color: #0f172a;
+                  margin-bottom: 8px;
+                }
+                .footer-note {
+                  font-size: 12px;
+                  color: #64748b;
+                  margin-bottom: 4px;
+                }
+                .footer-divider {
+                  border-top: 1px solid #e2e8f0;
+                  margin-top: 12px;
+                  padding-top: 12px;
+                }
+                .phone-number {
+                  font-size: 12px;
+                  color: #94a3b8;
+                }
+                @media print {
+                  body {
+                    background: white;
+                    padding: 0;
+                  }
+                  .receipt-container {
+                    box-shadow: none;
+                    border-radius: 0;
+                    max-width: 80mm;
+                    width: 80mm;
+                    margin: 0 auto;
+                  }
+                  .header {
+                    background: white !important;
+                    color: black !important;
+                    padding: 12px;
+                    border-bottom: none;
+                  }
+                  .store-name { color: black !important; font-size: 16px; }
+                  .subtitle, .tagline { color: black !important; }
+                  .logo-container {
+                    background: transparent;
+                    box-shadow: none;
+                    margin-bottom: 8px;
+                  }
+                  .logo { width: 48px; height: 48px; }
+                  .receipt-id-section {
+                    background: white !important;
+                    padding: 12px 16px;
+                    border-bottom: none;
+                  }
+                  .receipt-number { font-size: 20px; }
+                  .transaction-details,
+                  .customer-section,
+                  .items-section,
+                  .totals-section,
+                  .payment-section,
+                  .footer {
+                    padding: 8px 16px;
+                  }
+                  .totals-section { background: white !important; }
+                  .customer-section {
+                    background: white !important;
+                    border-bottom: 1px dashed #ccc;
+                  }
+                  .customer-title { color: black !important; }
+                  .customer-name { color: black !important; }
+                  .customer-phone { color: black !important; }
+                  .payment-box { padding: 8px; }
+                  .payment-method-box {
+                    background: white !important;
+                    color: black !important;
+                    border: 1px solid #ccc;
+                  }
+                  .footer-note:not(.phone-number) { display: none; }
+                }
               </style>
             </head>
             <body>
-              <div class="receipt">
+              <div class="receipt-container">
                 <div class="header">
-                  <h2>RECEIPT</h2>
-                  <p>POS System</p>
+                  <div class="logo-container">
+                    <img src="${logoUrl}" alt="Logo" class="logo" />
+                  </div>
+                  <h1 class="store-name">${storeName}</h1>
+                  <p class="subtitle">Official Receipt</p>
+                  <p class="tagline">Quality care for mothers & kids</p>
                 </div>
-                
-                <div class="receipt-id">Receipt #${saleId}</div>
-                
-                <div class="customer-info">
-                  <p><strong>Cashier:</strong> Benedicta Sarpong</p>
-                  <p><strong>Customer:</strong> ${manualCustomerName || "Walk-in"}</p>
-                  <p><strong>Phone:</strong> ${manualCustomerPhone || "N/A"}</p>
-                  <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
+
+                <div class="receipt-id-section">
+                  <p class="receipt-label">Receipt Number</p>
+                  <p class="receipt-number">${saleId}</p>
                 </div>
-                
-                <div class="items">
-                  <p><strong>Items:</strong></p>
+
+                <div class="customer-section">
+                  <p class="customer-title">Customer Details</p>
+                  <p class="customer-name">${manualCustomerName}</p>
+                  <p class="customer-phone">Tel: ${manualCustomerPhone}</p>
+                </div>
+
+                <div class="transaction-details">
+                  <div class="detail-row">
+                    <span class="detail-label">Date & Time</span>
+                    <span class="detail-value">${receiptDate}</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Cashier</span>
+                    <span class="detail-value">${cashierName}</span>
+                  </div>
+                </div>
+
+                <div class="items-section">
                   ${cart
                     .map(
-                      (item) => `
+                      (item: any) => `
                     <div class="item">
-                      <span>${item.productName} x${item.quantity}</span>
-                      <span>GHS ${item.total.toFixed(2)}</span>
+                      <div class="item-header">
+                        <span class="item-name">${item.productName}</span>
+                        <span class="item-total">GHS ${item.total.toFixed(2)}</span>
+                      </div>
+                      <div class="item-details">${item.quantity} × GHS ${item.price.toFixed(2)}</div>
                     </div>
                   `,
                     )
                     .join("")}
                 </div>
-                
-                <div class="totals">
-                  <div class="item">
-                    <span>Subtotal:</span>
-                    <span>GHS ${subtotal.toFixed(2)}</span>
+
+                <div class="divider">
+                  <div class="dashed-line"></div>
+                </div>
+
+                <div class="totals-section">
+                  <div class="total-row">
+                    <span class="total-label">Subtotal</span>
+                    <span class="total-value">GHS ${subtotal.toFixed(2)}</span>
                   </div>
-                  <div class="total-line">
-                    <span>TOTAL:</span>
-                    <span>GHS ${total.toFixed(2)}</span>
+                  <div class="total-row grand-total">
+                    <span class="total-label">Total</span>
+                    <span class="total-value">GHS ${total.toFixed(2)}</span>
                   </div>
                 </div>
-                
-                <div class="totals">
-                  <div class="item">
-                    <span><strong>Payment Method:</strong></span>
-                    <span>${paymentMethod === "cash" ? "Cash" : "Mobile Money"}</span>
+
+                <div class="payment-section">
+                  <div class="payment-grid">
+                    <div class="payment-box pink">
+                      <p class="payment-box-label">Amount Paid</p>
+                      <p class="payment-box-value">GHS ${displayAmountReceived.toFixed(2)}</p>
+                    </div>
+                    <div class="payment-box green">
+                      <p class="payment-box-label">Change</p>
+                      <p class="payment-box-value">GHS ${displayChange.toFixed(2)}</p>
+                    </div>
                   </div>
-                  ${
-                    paymentMethod === "cash"
-                      ? `
-                    <div class="item">
-                      <span>Amount Received:</span>
-                      <span>GHS ${amountReceived.toFixed(2)}</span>
-                    </div>
-                    <div class="item">
-                      <span>Change:</span>
-                      <span>GHS ${change.toFixed(2)}</span>
-                    </div>
-                  `
-                      : ""
-                  }
+                  <div class="payment-method-box">
+                    <p class="payment-method-label">Payment Method</p>
+                    <p class="payment-method-value">${displayPaymentMethod}</p>
+                  </div>
                 </div>
-                
+
                 <div class="footer">
-                  <p>Thank you for your purchase!</p>
-                  <p>Keep this receipt for your records</p>
+                  <p class="thank-you">✓ Thank You for Your Purchase!</p>
+                  <p class="footer-note">Keep this receipt for your records</p>
+                  <p class="footer-note">Valid proof of purchase</p>
+                  <p class="footer-note">Items Purchased are non-refundable!</p>
+                  <div class="footer-divider">
+                    <p class="phone-number">Tel: 0548 048 520</p>
+                  </div>
                 </div>
               </div>
               <script>
@@ -549,97 +915,29 @@ const CashierClient = () => {
 
       {showReceiptPreview && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <Card className="w-full max-w-md max-h-[90vh] overflow-y-auto">
-            <CardHeader>
+          <Card className="w-full max-w-lg max-h-[90vh] overflow-y-auto">
+            <CardHeader className="pb-2">
               <CardTitle>Receipt Preview</CardTitle>
             </CardHeader>
-            <div className="px-6 py-4 space-y-4">
-              {/* Receipt Content */}
-              <div className="border-b border-border pb-4 space-y-2">
-                <div className="text-center space-y-1">
-                  <p className="font-bold text-lg">RECEIPT</p>
-                  <p className="text-xs text-muted-foreground">POS System</p>
-                </div>
-              </div>
-
-              {/* Receipt ID display */}
-              <div className="bg-[var(--brand-pink-300)] px-4 py-3 rounded border border-[var(--brand-pink-300)]">
-                <p className="text-xs text-muted-foreground font-semibold">Receipt Number</p>
-                <p className="text-lg font-mono font-bold text-[var(--brand-pink-600)]">ID will be generated</p>
-              </div>
-
-              {/* Customer Info */}
-              <div className="space-y-1 text-sm border-b border-border pb-4">
-                <p>
-                  <span className="font-semibold">Customer:</span> {manualCustomerName || "Walk-in"}
-                </p>
-                {manualCustomerPhone && (
-                  <p>
-                    <span className="font-semibold">Phone:</span> {manualCustomerPhone}
-                  </p>
-                )}
-                <p>
-                  <span className="font-semibold">Cashier:</span> Benedicta Sarpong
-                </p>
-                <p>
-                  <span className="font-semibold">Date:</span> {new Date().toLocaleDateString()}
-                </p>
-              </div>
-
-              {/* Items */}
-              <div className="space-y-2 border-b border-border pb-4">
-                <p className="font-semibold text-sm">Items:</p>
-                {cart.map((item) => (
-                  <div key={item.productId} className="flex justify-between text-sm">
-                    <span>
-                      {item.productName} x{item.quantity}
-                    </span>
-                    <span className="font-medium">GHS {item.total.toFixed(2)}</span>
-                  </div>
-                ))}
-              </div>
-
-              {/* Totals */}
-              <div className="space-y-2 border-b border-border pb-4 text-sm">
-                <div className="flex justify-between">
-                  <span>Subtotal:</span>
-                  <span>GHS {subtotal.toFixed(2)}</span>
-                </div>
-                <div className="flex justify-between font-bold text-base text-primary">
-                  <span>TOTAL:</span>
-                  <span>GHS {total.toFixed(2)}</span>
-                </div>
-              </div>
-
-              {/* Payment Info */}
-              <div className="space-y-1 text-sm border-b border-border pb-4">
-                <p>
-                  <span className="font-semibold">Payment Method:</span>{" "}
-                  {paymentMethod === "cash" ? "Cash" : "Mobile Money"}
-                </p>
-                {paymentMethod === "cash" && (
-                  <>
-                    <p>
-                      <span className="font-semibold">Amount Received:</span> GHS {amountReceived.toFixed(2)}
-                    </p>
-                    {change > 0 && (
-                      <p className="text-green-700 font-semibold">
-                        <span>Change:</span> GHS {change.toFixed(2)}
-                      </p>
-                    )}
-                  </>
-                )}
-                {paymentMethod === "mobileMoney" && (
-                  <p>
-                    <span className="font-semibold">Reference:</span> {paymentReference}
-                  </p>
-                )}
-              </div>
-
-              {/* Thank You */}
-              <div className="text-center text-sm text-muted-foreground">
-                <p>Thank you for your purchase!</p>
-              </div>
+            <div className="px-2">
+              <ReceiptDisplay
+                receiptId="(Will be generated)"
+                items={cart.map((item: any) => ({
+                  name: item.productName,
+                  quantity: item.quantity,
+                  price: item.price,
+                  total: item.total,
+                }))}
+                subtotal={subtotal}
+                total={total}
+                amountReceived={paymentMethod === "cash" ? amountReceived : total}
+                change={paymentMethod === "cash" ? change : 0}
+                paymentMethod={paymentMethod === "cash" ? "Cash" : "Mobile Money"}
+                dateTime={new Date().toLocaleString()}
+                cashierName="Benedicta Sarpong"
+                customerName={manualCustomerName}
+                customerPhone={manualCustomerPhone}
+              />
             </div>
 
             {/* Actions */}
