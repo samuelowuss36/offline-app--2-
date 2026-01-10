@@ -7,16 +7,16 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { X, Minus, Plus, ShoppingCart, Printer, Search, AlertCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { getProducts, addSale } from "@/lib/db"
+import { getProducts, addSale, Product, SaleItem } from "@/lib/db"
 import { useToast } from "@/hooks/use-toast"
 import ReceiptDisplay from "@/components/receipt/receipt-display"
 
 const CashierClient = () => {
   const { toast } = useToast()
-  const [products, setProducts] = useState([])
-  const [filteredProducts, setFilteredProducts] = useState([])
+  const [products, setProducts] = useState<Product[]>([])
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
   const [searchQuery, setSearchQuery] = useState("")
-  const [cart, setCart] = useState([])
+  const [cart, setCart] = useState<SaleItem[]>([])
   const [manualCustomerName, setManualCustomerName] = useState("")
   const [manualCustomerPhone, setManualCustomerPhone] = useState("")
   const [paymentMethod, setPaymentMethod] = useState("cash")
@@ -54,7 +54,7 @@ const CashierClient = () => {
     setProducts(data)
   }
 
-  const addToCart = (product) => {
+  const addToCart = (product: Product) => {
     const existingItem = cart.find((item) => item.productId === product.id)
     if (existingItem) {
       setCart(
@@ -82,11 +82,11 @@ const CashierClient = () => {
   const total = cart.reduce((acc, item) => acc + item.total, 0)
   const change = amountReceived - total
 
-  const removeFromCart = (productId) => {
+  const removeFromCart = (productId: string) => {
     setCart(cart.filter((item) => item.productId !== productId))
   }
 
-  const updateCartQuantity = (productId, newQuantity) => {
+  const updateCartQuantity = (productId: string, newQuantity: number) => {
     if (newQuantity <= 0) {
       removeFromCart(productId)
     } else {
