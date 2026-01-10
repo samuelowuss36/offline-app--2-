@@ -1,13 +1,11 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
 import { getSession } from "@/lib/auth"
 import LoginPage from "@/components/auth/login-page"
 import { initializeSystem } from "./init-client"
 
 export default function Home() {
-  const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [initError, setInitError] = useState<string | null>(null)
   const [session, setSession] = useState(getSession())
@@ -37,10 +35,11 @@ export default function Home() {
   useEffect(() => {
     if (!loading && !initError) {
       if (session) {
-        router.push(session.role === "admin" ? "/admin" : "/cashier")
+        // Use window.location for reliable navigation in static exports
+        window.location.href = session.role === "admin" ? "./admin/" : "./cashier/"
       }
     }
-  }, [loading, session, router, initError])
+  }, [loading, session, initError])
 
   if (loading) {
     return (

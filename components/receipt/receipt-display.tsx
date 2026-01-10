@@ -49,7 +49,7 @@ export default function ReceiptDisplay({
         <div className="bg-gradient-to-r from-[var(--brand-pink)] to-[var(--brand-pink-600)] text-white p-8 border-b-4 border-[var(--brand-pink)] print:bg-white print:text-black print:border-b-0 print:p-3">
           <div className="text-center">
             <div className="inline-block mb-3 p-1 bg-white rounded-full shadow-lg print:mb-2 print:p-0 print:bg-transparent print:rounded-none print:shadow-none">
-              <img src="/logo.jpeg" alt="Logo" className="w-16 h-16 object-contain print:w-12 print:h-12" />
+              <img src="./logo.jpeg" alt="Logo" className="w-16 h-16 object-contain print:w-12 print:h-12" />
             </div>
             <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight mb-1 brand-font text-primary print:text-lg print:font-bold print:text-black">{storeName}</h1>
             <p className="text-xs text-slate-300 uppercase tracking-widest font-semibold print:text-xs print:text-black">Official Receipt</p>

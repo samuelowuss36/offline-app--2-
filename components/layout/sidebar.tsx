@@ -1,6 +1,5 @@
 "use client"
 
-import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
@@ -17,13 +16,17 @@ export function Sidebar({ userRole, onLogout }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false)
 
   const adminLinks = [
-    { href: "/admin", label: "Dashboard", icon: Home },
-    { href: "/admin/inventory", label: "Inventory", icon: Package },
-    { href: "/admin/receipts", label: "Receipts", icon: Receipt },
-    { href: "/admin/reports", label: "Reports", icon: BarChart3 },
+    { href: "./", label: "Dashboard", icon: Home, matchPath: "/admin" },
+    { href: "./inventory/", label: "Inventory", icon: Package, matchPath: "/admin/inventory" },
+    { href: "./receipts/", label: "Receipts", icon: Receipt, matchPath: "/admin/receipts" },
+    { href: "./reports/", label: "Reports", icon: BarChart3, matchPath: "/admin/reports" },
   ]
 
   const links = userRole === "admin" ? adminLinks : []
+
+  const handleNavigation = (href: string) => {
+    window.location.href = href
+  }
 
   return (
     <div
@@ -42,21 +45,21 @@ export function Sidebar({ userRole, onLogout }: SidebarProps) {
       </div>
 
       <nav className="flex-1 overflow-y-auto p-4 space-y-2">
-        {links.map(({ href, label, icon: Icon }) => (
-          <Link key={href} href={href}>
-            <button
-              className={cn(
-                "w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-colors",
-                pathname === href
-                  ? "bg-sidebar-primary text-sidebar-primary-foreground"
-                  : "hover:bg-sidebar-accent/20 text-sidebar-foreground",
-              )}
-              title={label}
-            >
-              <Icon className="h-5 w-5 flex-shrink-0" />
-              {!collapsed && <span className="text-sm font-medium">{label}</span>}
-            </button>
-          </Link>
+        {links.map(({ href, label, icon: Icon, matchPath }) => (
+          <button
+            key={href}
+            onClick={() => handleNavigation(href)}
+            className={cn(
+              "w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-colors",
+              pathname === matchPath || pathname === matchPath + "/"
+                ? "bg-sidebar-primary text-sidebar-primary-foreground"
+                : "hover:bg-sidebar-accent/20 text-sidebar-foreground",
+            )}
+            title={label}
+          >
+            <Icon className="h-5 w-5 flex-shrink-0" />
+            {!collapsed && <span className="text-sm font-medium">{label}</span>}
+          </button>
         ))}
       </nav>
 

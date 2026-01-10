@@ -14,7 +14,7 @@ export default function CashierLayout({ children }: { children: React.ReactNode 
   useEffect(() => {
     const session = getSession()
     if (!session || session.role !== "cashier") {
-      router.push("/")
+      window.location.href = "./"
       return
     }
     setAuthorized(true)
@@ -26,7 +26,7 @@ export default function CashierLayout({ children }: { children: React.ReactNode 
 
   const handleLogout = () => {
     clearSession()
-    router.push("/")
+    window.location.href = "./"
   }
 
   return (
