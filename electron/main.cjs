@@ -22,7 +22,7 @@ function createWindow() {
     },
   })
 
-  win.loadURL("https://example.com")
+  win.loadURL("https://localhost:3000")
 }
 
 app.whenReady().then(createWindow)
