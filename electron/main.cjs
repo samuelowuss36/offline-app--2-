@@ -22,9 +22,10 @@ function createWindow() {
     },
   })
 
-  win.loadFile(
+win.loadFile(
   path.join(__dirname, "../out/index.html")
-)
+);
+
 
 }
 
