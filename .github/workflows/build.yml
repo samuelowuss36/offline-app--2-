@@ -1,4 +1,6 @@
 name: Build Electron App (Windows)
+env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 on:
   push:
@@ -30,3 +32,5 @@ jobs:
         with:
           name: electron-exe
           path: dist/
+         
+
