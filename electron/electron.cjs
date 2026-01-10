@@ -1,6 +1,5 @@
 const { app, BrowserWindow, Menu, ipcMain } = require('electron')
 const path = require('path')
-const isDev = require('electron-is-dev')
 const fs = require('fs')
 const os = require('os')
 
