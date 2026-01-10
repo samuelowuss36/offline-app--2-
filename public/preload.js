@@ -1,5 +1,5 @@
-const { contextBridge, ipcRenderer } = require('electron')
+import { contextBridge, ipcRenderer } from "electron"
 
-contextBridge.exposeInMainWorld('api', {
-  getDbPath: () => ipcRenderer.invoke('get-db-path'),
+contextBridge.exposeInMainWorld("api", {
+  getDbPath: () => ipcRenderer.invoke("get-db-path"),
 })
