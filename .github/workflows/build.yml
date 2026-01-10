@@ -29,3 +29,8 @@ jobs:
         with:
           name: electron-exe
           path: dist/
+
+      - name: Build Next.js
+        run: |
+          npm run build
+          npx next export
