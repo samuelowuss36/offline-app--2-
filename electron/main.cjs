@@ -22,7 +22,10 @@ function createWindow() {
     },
   })
 
-  win.loadURL("https://localhost:3000")
+  win.loadFile(
+  path.join(__dirname, "../out/index.html")
+)
+
 }
 
 app.whenReady().then(createWindow)
