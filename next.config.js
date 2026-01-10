@@ -1,11 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: "export",
-  assetPrefix: "./",
-  trailingSlash: true,
-  images: {
-    unoptimized: true
-  }
-};
+  reactStrictMode: true,
+  output: 'export',
+}
 
-module.exports = nextConfig;
+export default nextConfig
