@@ -2,7 +2,8 @@
 
 import { Button } from "@/components/ui/button"
 import Logo from "@/components/ui/logo"
-import { getSession } from "@/lib/auth"
+import { getSession, type AuthSession } from "@/lib/auth"
+import { getLogoPath } from "@/lib/navigation"
 import { LogOut, Clock } from "lucide-react"
 import { useEffect, useState } from "react"
 
@@ -12,10 +13,15 @@ interface TopBarProps {
 }
 
 export function TopBar({ userRole, onLogout }: TopBarProps) {
-  const session = getSession()
+  const [session, setSession] = useState<AuthSession | null>(null)
   const [time, setTime] = useState("")
+  const [logoSrc, setLogoSrc] = useState("./logo.jpeg")
 
   useEffect(() => {
+    // Get session on client side only
+    setSession(getSession())
+    setLogoSrc(getLogoPath())
+    
     const updateTime = () => {
       const now = new Date()
       setTime(now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit" }))
@@ -29,7 +35,7 @@ export function TopBar({ userRole, onLogout }: TopBarProps) {
     <div className="bg-card border-b border-border shadow-sm px-6 py-4 flex items-center justify-between">
       <div className="flex items-center gap-4">
         <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center p-1 shadow-sm overflow-hidden">
-          <img src="./logo.jpeg" alt="Logo" className="w-full h-full object-contain rounded-full" />
+          <img src={logoSrc} alt="Logo" className="w-full h-full object-contain rounded-full" />
         </div>
         <div>
           <h1 className="text-2xl font-bold text-primary">Owoabenes Mothercare & Kids Boutique</h1>

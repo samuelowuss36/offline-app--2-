@@ -2,8 +2,9 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { validateLogin, setSession } from "@/lib/auth"
+import { navigateToAdmin, navigateToCashier, getLogoPath } from "@/lib/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -16,6 +17,11 @@ export default function LoginPage() {
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
+  const [logoSrc, setLogoSrc] = useState("./logo.jpeg")
+
+  useEffect(() => {
+    setLogoSrc(getLogoPath())
+  }, [])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -27,8 +33,12 @@ export default function LoginPage() {
 
       if (session) {
         setSession(session)
-        // Use window.location for reliable navigation in static exports
-        window.location.href = session.role === "admin" ? "./admin/" : "./cashier/"
+        // Use navigation utility for reliable navigation in Electron
+        if (session.role === "admin") {
+          navigateToAdmin()
+        } else {
+          navigateToCashier()
+        }
       } else {
         setError("Invalid username or password")
       }
@@ -45,7 +55,7 @@ export default function LoginPage() {
       <Card className="w-full max-w-md">
         <div className="flex justify-center -mt-10">
           <div className="bg-white p-5 rounded-full shadow-md">
-            <img src="./logo.jpeg" alt="Logo" className="w-16 h-16 object-contain" />
+            <img src={logoSrc} alt="Logo" className="w-16 h-16 object-contain" />
           </div>
         </div>
         <CardHeader className="space-y-2 text-center">

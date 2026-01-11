@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react"
 import { getSales, getProducts } from "@/lib/db"
 import type { Sale, Product } from "@/lib/db"
+import { getLogoPath } from "@/lib/navigation"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -69,8 +70,8 @@ export default function ReceiptsPage() {
       if (phoneMatch) customerPhone = phoneMatch[1].trim()
     }
     
-    // Get absolute URL for logo
-    const logoUrl = `${window.location.origin}/logo.jpeg`
+    // Get logo URL that works in Electron
+    const logoUrl = getLogoPath()
 
     const printWindow = window.open("", "", "height=800,width=600")
     if (printWindow) {

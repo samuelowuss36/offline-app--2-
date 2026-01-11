@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { Home, Package, BarChart3, LogOut, Menu, Receipt } from "lucide-react"
 import { useState } from "react"
+import { navigateToAdmin, navigateToAdminPage } from "@/lib/navigation"
 
 interface SidebarProps {
   userRole: "admin" | "cashier"
@@ -16,16 +17,20 @@ export function Sidebar({ userRole, onLogout }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false)
 
   const adminLinks = [
-    { href: "./", label: "Dashboard", icon: Home, matchPath: "/admin" },
-    { href: "./inventory/", label: "Inventory", icon: Package, matchPath: "/admin/inventory" },
-    { href: "./receipts/", label: "Receipts", icon: Receipt, matchPath: "/admin/receipts" },
-    { href: "./reports/", label: "Reports", icon: BarChart3, matchPath: "/admin/reports" },
+    { route: "", label: "Dashboard", icon: Home, matchPath: "/admin" },
+    { route: "inventory", label: "Inventory", icon: Package, matchPath: "/admin/inventory" },
+    { route: "receipts", label: "Receipts", icon: Receipt, matchPath: "/admin/receipts" },
+    { route: "reports", label: "Reports", icon: BarChart3, matchPath: "/admin/reports" },
   ]
 
   const links = userRole === "admin" ? adminLinks : []
 
-  const handleNavigation = (href: string) => {
-    window.location.href = href
+  const handleNavigation = (route: string) => {
+    if (route === "") {
+      navigateToAdmin()
+    } else {
+      navigateToAdminPage(route)
+    }
   }
 
   return (
@@ -45,10 +50,10 @@ export function Sidebar({ userRole, onLogout }: SidebarProps) {
       </div>
 
       <nav className="flex-1 overflow-y-auto p-4 space-y-2">
-        {links.map(({ href, label, icon: Icon, matchPath }) => (
+        {links.map(({ route, label, icon: Icon, matchPath }) => (
           <button
-            key={href}
-            onClick={() => handleNavigation(href)}
+            key={route}
+            onClick={() => handleNavigation(route)}
             className={cn(
               "w-full flex items-center gap-3 px-4 py-2 rounded-lg transition-colors",
               pathname === matchPath || pathname === matchPath + "/"

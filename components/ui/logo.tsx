@@ -1,6 +1,7 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
+import { getLogoPath, getAssetPath } from "@/lib/navigation"
 
 export default function Logo({
   size = 56,
@@ -11,7 +12,11 @@ export default function Logo({
   className?: string
   alt?: string
 }) {
-  const [src, setSrc] = useState("/logo.jpeg")
+  const [src, setSrc] = useState("./logo.jpeg")
+
+  useEffect(() => {
+    setSrc(getLogoPath())
+  }, [])
 
   return (
     <img
@@ -20,7 +25,7 @@ export default function Logo({
       height={size}
       alt={alt}
       className={`object-contain ${className}`}
-      onError={() => setSrc("/placeholder-logo.png")}
+      onError={() => setSrc(getAssetPath("placeholder-logo.png"))}
     />
   )
 }
