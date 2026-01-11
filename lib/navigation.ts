@@ -59,15 +59,16 @@ export function getLogoPath(): string {
  */
 export function navigateTo(route: string): void {
   if (typeof window === "undefined") return
-  
+
   const { protocol } = window.location
-  
+  console.log("[DEBUG] Navigating to:", route, "protocol:", protocol)
+
   if (protocol === "file:") {
     // For Electron, construct the full file path
     const basePath = getBasePath()
     // Remove leading slash from route and add index.html for directories
     let targetPath = route.startsWith("/") ? route.substring(1) : route
-    
+
     // Handle root path
     if (targetPath === "" || targetPath === "/") {
       targetPath = "index.html"
@@ -77,10 +78,13 @@ export function navigateTo(route: string): void {
         targetPath = targetPath.replace(/\/$/, "") + "/index.html"
       }
     }
-    
-    window.location.href = `file://${basePath}${targetPath}`
+
+    const fullPath = `file://${basePath}${targetPath}`
+    console.log("[DEBUG] File navigation to:", fullPath)
+    window.location.href = fullPath
   } else {
     // For development server, use simple navigation
+    console.log("[DEBUG] HTTP navigation to:", route)
     window.location.href = route
   }
 }

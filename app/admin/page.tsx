@@ -25,12 +25,19 @@ export default function AdminDashboard() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
 
+  console.log("[DEBUG] AdminDashboard component mounted")
+
   useEffect(() => {
+    console.log("[DEBUG] AdminDashboard useEffect running")
     const loadData = async () => {
       try {
+        console.log("[DEBUG] Loading sales and products data")
         const [salesData, productsData] = await Promise.all([getSales(), getProducts()])
+        console.log("[DEBUG] Data loaded successfully", { salesCount: salesData.length, productsCount: productsData.length })
         setSales(salesData)
         setProducts(productsData)
+      } catch (error) {
+        console.error("[DEBUG] Error loading data:", error)
       } finally {
         setLoading(false)
       }
