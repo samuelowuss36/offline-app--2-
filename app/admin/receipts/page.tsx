@@ -58,7 +58,7 @@ export default function ReceiptsPage() {
     const cashierName = sale.cashierName || "Benedicta Sarpong"
     const displayPaymentMethod = sale.paymentMethod === "cash" ? "Cash" : "Mobile Money"
     const displayAmountReceived = sale.amountReceived ?? 0
-    const displayChange = sale.amountReceived ? sale.amountReceived - sale.total : 0
+    const displayChange = sale.change ?? 0
 
     // Parse customer info from notes
     let customerName = "Walk-in"
@@ -279,6 +279,7 @@ export default function ReceiptsPage() {
                 border-radius: 8px;
                 padding: 8px;
                 border: 1px solid;
+                text-align: center;
               }
               .payment-box.pink {
                 background: #fdf2f8;
@@ -288,13 +289,18 @@ export default function ReceiptsPage() {
                 background: #f0fdf4;
                 border-color: #bbf7d0;
               }
+              .payment-box.dark {
+                background: #1e293b;
+                border-color: #334155;
+                color: white;
+              }
               .payment-box-label {
                 font-size: 10px;
-                color: #475569;
                 font-weight: 600;
                 text-transform: uppercase;
                 letter-spacing: 0.05em;
                 margin-bottom: 4px;
+                opacity: 0.8;
               }
               .payment-box-value {
                 font-size: 14px;
@@ -303,30 +309,11 @@ export default function ReceiptsPage() {
               }
               .payment-box.pink .payment-box-value { color: #be185d; }
               .payment-box.green .payment-box-value { color: #16a34a; }
-              .payment-method-box {
-                background: #1e293b;
-                border-radius: 8px;
-                padding: 8px;
-                color: white;
-              }
-              .payment-method-label {
-                font-size: 10px;
-                font-weight: 600;
-                text-transform: uppercase;
-                letter-spacing: 0.05em;
-                margin-bottom: 4px;
-                opacity: 0.8;
-              }
-              .payment-method-value {
-                font-size: 12px;
-                font-weight: 700;
-                text-transform: capitalize;
-              }
+              .payment-box.dark .payment-box-value { color: white; }
               .footer {
                 padding: 12px 16px;
                 text-align: center;
                 background: white;
-                font-weight: bold;
               }
               .thank-you {
                 font-size: 12px;
@@ -334,9 +321,15 @@ export default function ReceiptsPage() {
                 color: #0f172a;
                 margin-bottom: 4px;
               }
+              .visit-again {
+                font-size: 10px;
+                color: #94a3b8;
+                margin-bottom: 2px;
+              }
               .phone-number {
                 font-size: 10px;
                 color: #94a3b8;
+                font-weight: 700;
               }
               @media print {
                 body {
@@ -378,20 +371,23 @@ export default function ReceiptsPage() {
                 .customer-title { color: black !important; }
                 .customer-name { color: black !important; }
                 .customer-phone { color: black !important; }
+                .customer-section,
                 .transaction-details,
                 .items-section,
                 .totals-section,
                 .payment-section,
                 .footer {
-                  padding: 8px 12px;
+                  padding: 6px 12px;
                 }
                 .totals-section { background: white !important; }
                 .payment-box { padding: 6px; }
-                .payment-method-box {
+                .payment-box.dark {
                   background: white !important;
                   color: black !important;
                   border: 1px solid #ccc;
                 }
+                .footer { padding: 12px 16px; }
+                .thank-you, .visit-again, .phone-number { color: black; }
               }
             </style>
           </head>
@@ -477,9 +473,8 @@ export default function ReceiptsPage() {
 
               <div class="footer">
                 <p class="thank-you">✓ Thank You for Your Purchase!</p>
-                <p class="phone-number">Visit Us Again...!</p>
+                <p class="visit-again">Visit Us Again...!</p>
                 <p class="phone-number">Tel: 0548 048 520/ 0549 241 991</p>
-
               </div>
             </div>
             <script>

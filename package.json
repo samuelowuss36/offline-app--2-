@@ -97,6 +97,7 @@
       "buildResources": "public"
     },
     "win": {
+      "icon": "public/logo.jpeg",
       "target": [
         {
           "target": "nsis",
