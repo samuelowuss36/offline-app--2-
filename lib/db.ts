@@ -140,7 +140,7 @@ async function getDB(): Promise<IDBDatabase> {
 export async function addProduct(product: Omit<Product, "createdAt">): Promise<void> {
   const database = await getDB()
   const tx = database.transaction("products", "readwrite")
-  await new Promise((resolve, reject) => {
+  await new Promise<void>((resolve, reject) => {
     const request = tx.objectStore("products").add({
       ...product,
       createdAt: Date.now(),
@@ -148,8 +148,9 @@ export async function addProduct(product: Omit<Product, "createdAt">): Promise<v
     request.onerror = () => reject(request.error)
     request.onsuccess = () => {
       console.log("[v0] Product saved to database:", product.name)
-      resolve(null)
     }
+    tx.oncomplete = () => resolve()
+    tx.onerror = () => reject(tx.error)
   })
 }
 

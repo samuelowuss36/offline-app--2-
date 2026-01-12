@@ -18,6 +18,7 @@ app.setPath('userData', dbDir)
 console.log('>>> User data path set to:', app.getPath('userData'))
 
 let server = null
+const PORT = 3001 // Fixed port for consistent IndexedDB origin
 
 function createWindow() {
   // Start local server for static files
@@ -29,9 +30,8 @@ function createWindow() {
     res.sendFile(path.join(outPath, "index.html"))
   })
 
-  server = expressApp.listen(0, () => {
-    const port = server.address().port
-    console.log(`>>> Local server started on port ${port} <<<`)
+  server = expressApp.listen(PORT, () => {
+    console.log(`>>> Local server started on port ${PORT} <<<`)
 
     const win = new BrowserWindow({
       width: 800,
@@ -42,7 +42,7 @@ function createWindow() {
       },
     })
 
-    win.loadURL(`http://localhost:${port}`)
+    win.loadURL(`http://localhost:${PORT}`)
 
     win.on("closed", () => {
       if (server) {
