@@ -55,11 +55,11 @@ export default function ReceiptsPage() {
   const handlePrintReceipt = (sale: Sale) => {
     const storeName = "Owoabenes Mothercare & Kids Boutique"
     const receiptDate = new Date(sale.createdAt).toLocaleString()
-    const cashierName = sale.cashierName || "Unknown"
+    const cashierName = sale.cashierName || "Benedicta Sarpong"
     const displayPaymentMethod = sale.paymentMethod === "cash" ? "Cash" : "Mobile Money"
     const displayAmountReceived = sale.total
     const displayChange = 0
-    
+
     // Parse customer info from notes
     let customerName = "Walk-in"
     let customerPhone = ""
@@ -69,7 +69,7 @@ export default function ReceiptsPage() {
       if (customerMatch) customerName = customerMatch[1].trim()
       if (phoneMatch) customerPhone = phoneMatch[1].trim()
     }
-    
+
     // Get logo URL that works in Electron
     const logoUrl = getLogoPath()
 
@@ -84,128 +84,125 @@ export default function ReceiptsPage() {
               * { margin: 0; padding: 0; box-sizing: border-box; }
               body {
                 font-family: 'Segoe UI', Arial, sans-serif;
-                background: #f5f5f5;
+                background: white;
                 padding: 20px;
+                display: flex;
+                justify-content: center;
               }
               .receipt-container {
-                max-width: 400px;
-                margin: 0 auto;
+                width: 100%;
+                max-width: 320px;
                 background: white;
-                border-radius: 24px;
-                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+                border-radius: 16px;
                 overflow: hidden;
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
               }
               .header {
                 background: linear-gradient(to right, #ec4899, #db2777);
                 color: white;
-                padding: 32px;
+                padding: 16px;
                 text-align: center;
-                border-bottom: 4px solid #ec4899;
+                border-bottom: 2px solid #ec4899;
               }
               .logo-container {
                 display: inline-block;
-                margin-bottom: 12px;
-                padding: 4px;
+                margin-bottom: 8px;
+                padding: 2px;
                 background: white;
                 border-radius: 50%;
-                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
               }
               .logo {
-                width: 64px;
-                height: 64px;
+                width: 40px;
+                height: 40px;
                 object-fit: contain;
               }
               .store-name {
-                font-size: 24px;
+                font-size: 18px;
                 font-weight: 800;
                 letter-spacing: -0.025em;
-                margin-bottom: 4px;
+                margin-bottom: 2px;
                 color: #be185d;
               }
               .subtitle {
-                font-size: 12px;
+                font-size: 10px;
                 color: #cbd5e1;
                 text-transform: uppercase;
                 letter-spacing: 0.1em;
                 font-weight: 600;
               }
-              .tagline {
-                font-size: 14px;
-                color: #e2e8f0;
-                font-style: italic;
-              }
               .receipt-id-section {
-                background: linear-gradient(to right, #fbcfe8, white);
-                padding: 24px 32px;
+                background: linear-gradient(to right, #fce7f3, white);
+                padding: 12px 16px;
                 text-align: center;
-                border-bottom: 2px solid #fbcfe8;
+                border-bottom: 1px solid #fce7f3;
               }
               .receipt-label {
-                font-size: 12px;
+                font-size: 10px;
                 color: #475569;
                 font-weight: 600;
                 text-transform: uppercase;
                 letter-spacing: 0.05em;
-                margin-bottom: 8px;
+                margin-bottom: 4px;
               }
               .receipt-number {
-                font-size: 28px;
+                font-size: 20px;
                 font-weight: 900;
                 font-family: monospace;
                 color: #be185d;
                 letter-spacing: -0.025em;
               }
-              .transaction-details {
-                padding: 20px 32px;
-                border-bottom: 1px solid #e2e8f0;
-              }
               .customer-section {
-                padding: 16px 32px;
+                padding: 12px 16px;
                 background: #fef3c7;
                 border-bottom: 1px solid #fcd34d;
               }
               .customer-title {
-                font-size: 12px;
+                font-size: 10px;
                 color: #92400e;
                 font-weight: 600;
                 text-transform: uppercase;
                 letter-spacing: 0.05em;
-                margin-bottom: 8px;
-              }
-              .customer-name {
-                font-size: 16px;
-                font-weight: 700;
-                color: #78350f;
                 margin-bottom: 4px;
               }
-              .customer-phone {
+              .customer-name {
                 font-size: 14px;
+                font-weight: 700;
+                color: #78350f;
+                margin-bottom: 2px;
+              }
+              .customer-phone {
+                font-size: 12px;
                 color: #92400e;
                 font-family: monospace;
+              }
+              .transaction-details {
+                padding: 12px 16px;
+                border-bottom: 1px solid #e2e8f0;
               }
               .detail-row {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                margin-bottom: 12px;
+                margin-bottom: 6px;
               }
               .detail-row:last-child { margin-bottom: 0; }
               .detail-label {
-                font-size: 12px;
+                font-size: 10px;
                 color: #475569;
                 font-weight: 500;
               }
               .detail-value {
-                font-size: 14px;
+                font-size: 12px;
                 font-family: monospace;
                 color: #1e293b;
               }
               .items-section {
-                padding: 24px 32px;
+                padding: 12px 16px;
                 border-bottom: 1px solid #e2e8f0;
               }
               .item {
-                margin-bottom: 16px;
+                margin-bottom: 8px;
               }
               .item:last-child { margin-bottom: 0; }
               .item-header {
@@ -214,31 +211,25 @@ export default function ReceiptsPage() {
                 align-items: flex-start;
               }
               .item-name {
-                font-size: 14px;
+                font-size: 12px;
                 font-weight: 600;
                 color: #0f172a;
                 flex: 1;
               }
               .item-total {
-                font-size: 14px;
+                font-size: 12px;
                 font-family: monospace;
                 font-weight: 700;
                 color: #0f172a;
-                margin-left: 12px;
+                margin-left: 8px;
               }
               .item-details {
-                font-size: 12px;
+                font-size: 10px;
                 color: #64748b;
-                margin-top: 4px;
-              }
-              .divider {
-                padding: 12px 32px;
-              }
-              .dashed-line {
-                border-top: 2px dashed #cbd5e1;
+                margin-top: 2px;
               }
               .totals-section {
-                padding: 20px 32px;
+                padding: 12px 16px;
                 background: #f8fafc;
                 border-bottom: 1px solid #e2e8f0;
               }
@@ -246,47 +237,47 @@ export default function ReceiptsPage() {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                margin-bottom: 12px;
+                margin-bottom: 6px;
               }
               .total-row:last-child { margin-bottom: 0; }
               .total-label {
-                font-size: 14px;
+                font-size: 12px;
                 color: #475569;
                 font-weight: 500;
               }
               .total-value {
-                font-size: 14px;
+                font-size: 12px;
                 font-family: monospace;
                 font-weight: 600;
                 color: #1e293b;
               }
               .grand-total {
-                padding-top: 12px;
+                padding-top: 6px;
                 border-top: 1px solid #cbd5e1;
               }
               .grand-total .total-label {
-                font-size: 16px;
+                font-size: 14px;
                 font-weight: 700;
                 color: #0f172a;
               }
               .grand-total .total-value {
-                font-size: 24px;
+                font-size: 18px;
                 font-weight: 900;
                 color: #0f172a;
               }
               .payment-section {
-                padding: 20px 32px;
+                padding: 12px 16px;
                 border-bottom: 1px solid #e2e8f0;
               }
               .payment-grid {
                 display: grid;
                 grid-template-columns: 1fr 1fr;
-                gap: 16px;
-                margin-bottom: 16px;
+                gap: 8px;
+                margin-bottom: 8px;
               }
               .payment-box {
-                border-radius: 12px;
-                padding: 16px;
+                border-radius: 8px;
+                padding: 8px;
                 border: 1px solid;
               }
               .payment-box.pink {
@@ -298,62 +289,53 @@ export default function ReceiptsPage() {
                 border-color: #bbf7d0;
               }
               .payment-box-label {
-                font-size: 12px;
+                font-size: 10px;
                 color: #475569;
                 font-weight: 600;
                 text-transform: uppercase;
                 letter-spacing: 0.05em;
-                margin-bottom: 8px;
+                margin-bottom: 4px;
               }
               .payment-box-value {
-                font-size: 18px;
+                font-size: 14px;
                 font-weight: 900;
                 font-family: monospace;
               }
               .payment-box.pink .payment-box-value { color: #be185d; }
               .payment-box.green .payment-box-value { color: #16a34a; }
               .payment-method-box {
-                background: linear-gradient(to right, #1e293b, #0f172a);
-                border-radius: 12px;
-                padding: 16px;
+                background: #1e293b;
+                border-radius: 8px;
+                padding: 8px;
                 color: white;
               }
               .payment-method-label {
-                font-size: 12px;
+                font-size: 10px;
                 font-weight: 600;
                 text-transform: uppercase;
                 letter-spacing: 0.05em;
-                margin-bottom: 8px;
+                margin-bottom: 4px;
                 opacity: 0.8;
               }
               .payment-method-value {
-                font-size: 16px;
+                font-size: 12px;
                 font-weight: 700;
                 text-transform: capitalize;
               }
               .footer {
-                padding: 24px 32px;
+                padding: 12px 16px;
                 text-align: center;
                 background: white;
+                font-weight: bold;
               }
               .thank-you {
-                font-size: 14px;
+                font-size: 12px;
                 font-weight: 700;
                 color: #0f172a;
-                margin-bottom: 8px;
-              }
-              .footer-note {
-                font-size: 12px;
-                color: #64748b;
                 margin-bottom: 4px;
               }
-              .footer-divider {
-                border-top: 1px solid #e2e8f0;
-                margin-top: 12px;
-                padding-top: 12px;
-              }
               .phone-number {
-                font-size: 12px;
+                font-size: 10px;
                 color: #94a3b8;
               }
               @media print {
@@ -371,46 +353,45 @@ export default function ReceiptsPage() {
                 .header {
                   background: white !important;
                   color: black !important;
-                  padding: 12px;
+                  padding: 8px;
                   border-bottom: none;
                 }
-                .store-name { color: black !important; font-size: 16px; }
-                .subtitle, .tagline { color: black !important; }
+                .store-name { color: black !important; font-size: 14px; }
+                .subtitle { color: black !important; }
                 .logo-container {
                   background: transparent;
                   box-shadow: none;
-                  margin-bottom: 8px;
+                  margin-bottom: 4px;
                 }
-                .logo { width: 48px; height: 48px; }
+                .logo { width: 32px; height: 32px; }
                 .receipt-id-section {
                   background: white !important;
-                  padding: 12px 16px;
+                  padding: 8px 12px;
                   border-bottom: none;
                 }
-                .receipt-number { font-size: 20px; }
-                .transaction-details,
-                .customer-section,
-                .items-section,
-                .totals-section,
-                .payment-section,
-                .footer {
-                  padding: 8px 16px;
-                }
-                .totals-section { background: white !important; }
+                .receipt-number { font-size: 16px; }
                 .customer-section {
                   background: white !important;
                   border-bottom: 1px dashed #ccc;
+                  padding: 8px 12px;
                 }
                 .customer-title { color: black !important; }
                 .customer-name { color: black !important; }
                 .customer-phone { color: black !important; }
-                .payment-box { padding: 8px; }
+                .transaction-details,
+                .items-section,
+                .totals-section,
+                .payment-section,
+                .footer {
+                  padding: 8px 12px;
+                }
+                .totals-section { background: white !important; }
+                .payment-box { padding: 6px; }
                 .payment-method-box {
                   background: white !important;
                   color: black !important;
                   border: 1px solid #ccc;
                 }
-                .footer-note:not(.phone-number) { display: none; }
               }
             </style>
           </head>
@@ -422,7 +403,6 @@ export default function ReceiptsPage() {
                 </div>
                 <h1 class="store-name">${storeName}</h1>
                 <p class="subtitle">Official Receipt</p>
-                <p class="tagline">Quality care for mothers & kids</p>
               </div>
 
               <div class="receipt-id-section">
@@ -430,15 +410,17 @@ export default function ReceiptsPage() {
                 <p class="receipt-number">${sale.id}</p>
               </div>
 
+              ${(customerName !== "Walk-in" || customerPhone) ? `
               <div class="customer-section">
-                <p class="customer-title">Customer Details</p>
-                <p class="customer-name">${customerName}</p>
-                ${customerPhone ? `<p class="customer-phone">Tel: ${customerPhone}</p>` : ''}
+                <p class="customer-title">Customer</p>
+                ${customerName !== "Walk-in" ? `<div class="customer-name">${customerName}</div>` : ''}
+                ${customerPhone ? `<div class="customer-phone">Tel: ${customerPhone}</div>` : ''}
               </div>
+              ` : ''}
 
               <div class="transaction-details">
                 <div class="detail-row">
-                  <span class="detail-label">Date & Time</span>
+                  <span class="detail-label">Date</span>
                   <span class="detail-value">${receiptDate}</span>
                 </div>
                 <div class="detail-row">
@@ -463,10 +445,6 @@ export default function ReceiptsPage() {
                   .join("")}
               </div>
 
-              <div class="divider">
-                <div class="dashed-line"></div>
-              </div>
-
               <div class="totals-section">
                 <div class="total-row">
                   <span class="total-label">Subtotal</span>
@@ -481,28 +459,27 @@ export default function ReceiptsPage() {
               <div class="payment-section">
                 <div class="payment-grid">
                   <div class="payment-box pink">
-                    <p class="payment-box-label">Amount Paid</p>
+                    <p class="payment-box-label">${displayPaymentMethod === "Mobile Money" ? "Sent" : "Paid"}</p>
                     <p class="payment-box-value">GHS ${displayAmountReceived.toFixed(2)}</p>
                   </div>
+                  ${displayChange > 0 ? `
                   <div class="payment-box green">
                     <p class="payment-box-label">Change</p>
                     <p class="payment-box-value">GHS ${displayChange.toFixed(2)}</p>
                   </div>
+                  ` : ''}
                 </div>
                 <div class="payment-method-box">
-                  <p class="payment-method-label">Payment Method</p>
+                  <p class="payment-method-label">Method</p>
                   <p class="payment-method-value">${displayPaymentMethod}</p>
                 </div>
               </div>
 
               <div class="footer">
                 <p class="thank-you">✓ Thank You for Your Purchase!</p>
-                <p class="footer-note">Keep this receipt for your records</p>
-                <p class="footer-note">Valid proof of purchase</p>
-                <p class="footer-note">Items Purchased are non-refundable!</p>
-                <div class="footer-divider">
-                  <p class="phone-number">Tel: 0548 048 520</p>
-                </div>
+                <p class="phone-number">Visit Us Again...!</p>
+                <p class="phone-number">Tel: 0548 048 520/ 0549 241 991</p>
+
               </div>
             </div>
             <script>

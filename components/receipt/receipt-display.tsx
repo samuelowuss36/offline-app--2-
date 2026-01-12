@@ -165,7 +165,8 @@ export default function ReceiptDisplay({
         {/* Footer */}
         <div className="px-4 py-3 text-center bg-white print:px-4 print:py-3 print:space-y-1 print:bg-white">
           <p className="text-xs font-bold text-slate-900 brand-font print:text-sm">✓ Thank You for Your Purchase!</p>
-          <p className="text-[10px] text-slate-400 print:text-xs">Tel: 0548 048 520</p>
+          <p className="text-[10px] text-slate-400 print:text-xs">Visit Us Again...!</p>
+          <p className="text-[10px] font-bold text-slate-400 print:text-xs">Tel: 0548 048 520/ 0549 241 991</p>
         </div>
       </div>
     </div>
