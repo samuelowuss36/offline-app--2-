@@ -43,6 +43,8 @@ export interface Sale {
   total: number
   paymentMethod: "cash" | "mobileMoney"
   paymentReference?: string
+  amountReceived: number
+  change: number
   cashierName?: string
   notes?: string
   createdAt: number

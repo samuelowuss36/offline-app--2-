@@ -57,8 +57,8 @@ export default function ReceiptsPage() {
     const receiptDate = new Date(sale.createdAt).toLocaleString()
     const cashierName = sale.cashierName || "Benedicta Sarpong"
     const displayPaymentMethod = sale.paymentMethod === "cash" ? "Cash" : "Mobile Money"
-    const displayAmountReceived = sale.total
-    const displayChange = 0
+    const displayAmountReceived = sale.amountReceived ?? 0
+    const displayChange = sale.amountReceived ? sale.amountReceived - sale.total : 0
 
     // Parse customer info from notes
     let customerName = "Walk-in"
@@ -271,7 +271,7 @@ export default function ReceiptsPage() {
               }
               .payment-grid {
                 display: grid;
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: 1fr 1fr 1fr;
                 gap: 8px;
                 margin-bottom: 8px;
               }
@@ -413,8 +413,10 @@ export default function ReceiptsPage() {
               ${(customerName !== "Walk-in" || customerPhone) ? `
               <div class="customer-section">
                 <p class="customer-title">Customer</p>
-                ${customerName !== "Walk-in" ? `<div class="customer-name">${customerName}</div>` : ''}
-                ${customerPhone ? `<div class="customer-phone">Tel: ${customerPhone}</div>` : ''}
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                  ${customerName !== "Walk-in" ? `<div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 10px; color: #92400e; font-weight: 500;">Name:</span><p class="customer-name">${customerName}</p></div>` : ''}
+                  ${customerPhone ? `<div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-size: 10px; color: #92400e; font-weight: 500;">Phone:</span><p class="customer-phone">${customerPhone}</p></div>` : ''}
+                </div>
               </div>
               ` : ''}
 
@@ -462,16 +464,14 @@ export default function ReceiptsPage() {
                     <p class="payment-box-label">${displayPaymentMethod === "Mobile Money" ? "Sent" : "Paid"}</p>
                     <p class="payment-box-value">GHS ${displayAmountReceived.toFixed(2)}</p>
                   </div>
-                  ${displayChange > 0 ? `
                   <div class="payment-box green">
                     <p class="payment-box-label">Change</p>
                     <p class="payment-box-value">GHS ${displayChange.toFixed(2)}</p>
                   </div>
-                  ` : ''}
-                </div>
-                <div class="payment-method-box">
-                  <p class="payment-method-label">Method</p>
-                  <p class="payment-method-value">${displayPaymentMethod}</p>
+                  <div class="payment-box dark">
+                    <p class="payment-box-label">Method</p>
+                    <p class="payment-box-value">${displayPaymentMethod}</p>
+                  </div>
                 </div>
               </div>
 
@@ -495,12 +495,14 @@ export default function ReceiptsPage() {
 
   const handleExportReceipts = () => {
     let csvContent = "data:text/csv;charset=utf-8,"
-    csvContent += "Receipt ID,Date,Customer,Cashier,Phone,Payment Method,Total,Profit,Items Count\n"
+    csvContent += "Receipt ID,Date,Customer,Cashier,Phone,Payment Method,Amount Received,Change,Total,Profit,Items Count\n"
 
     filteredSales.forEach((sale) => {
       const customerInfo = sale.notes ? sale.notes.split(",")[0].replace("Customer: ", "") : "Walk-in"
       const profit = calculateSaleProfit(sale)
-      csvContent += `${sale.id},${new Date(sale.createdAt).toLocaleString()},${customerInfo},${sale.cashierName || "Unknown"},${sale.paymentReference || "N/A"},${sale.paymentMethod},GHS ${sale.total.toFixed(2)},GHS ${profit.toFixed(2)},${sale.items.length}\n`
+      const amountReceived = sale.amountReceived ?? 0
+      const change = sale.amountReceived ? sale.amountReceived - sale.total : 0
+      csvContent += `${sale.id},${new Date(sale.createdAt).toLocaleString()},${customerInfo},${sale.cashierName || "Unknown"},${sale.paymentReference || "N/A"},${sale.paymentMethod},GHS ${amountReceived.toFixed(2)},GHS ${change.toFixed(2)},GHS ${sale.total.toFixed(2)},GHS ${profit.toFixed(2)},${sale.items.length}\n`
     })
 
     const encodedUri = encodeURI(csvContent)
@@ -569,6 +571,8 @@ export default function ReceiptsPage() {
                   <th className="text-left py-3 px-4 font-semibold">Customer</th>
                   <th className="text-left py-3 px-4 font-semibold">Cashier</th>
                   <th className="text-left py-3 px-4 font-semibold">Payment Method</th>
+                  <th className="text-right py-3 px-4 font-semibold">Amount Received</th>
+                  <th className="text-right py-3 px-4 font-semibold">Change</th>
                   <th className="text-left py-3 px-4 font-semibold">Items</th>
                   <th className="text-right py-3 px-4 font-semibold">Total Amount</th>
                   <th className="text-right py-3 px-4 font-semibold">Profit</th>
@@ -596,6 +600,8 @@ export default function ReceiptsPage() {
                           {sale.paymentMethod === "cash" ? "Cash" : "Mobile Money"}
                         </span>
                       </td>
+                      <td className="py-3 px-4 text-right font-semibold">GHS {(sale.amountReceived ?? 0).toFixed(2)}</td>
+                      <td className="py-3 px-4 text-right font-semibold text-green-600">GHS {(sale.change ?? 0).toFixed(2)}</td>
                       <td className="py-3 px-4 text-center">{sale.items.length}</td>
                       <td className="py-3 px-4 text-right font-semibold text-primary">GHS {sale.total.toFixed(2)}</td>
                       <td className="py-3 px-4 text-right font-semibold text-green-600">GHS {profit.toFixed(2)}</td>

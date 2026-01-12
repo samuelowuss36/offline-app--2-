@@ -144,6 +144,9 @@ const CashierClient = () => {
   const confirmPrintReceipt = async () => {
     setProcessingPayment(true)
     try {
+      const amountReceivedValue = paymentMethod === "cash" ? amountReceived : mobileMoneyAmount
+      const changeValue = paymentMethod === "cash" ? change : (mobileMoneyAmount - total)
+
       const saleId = await addSale({
         items: cart,
         subtotal: subtotal,
@@ -152,6 +155,8 @@ const CashierClient = () => {
         total: total,
         paymentMethod: paymentMethod as "cash" | "mobileMoney",
         paymentReference: undefined,
+        amountReceived: amountReceivedValue,
+        change: changeValue,
         cashierName: "Benedicta Sarpong",
         notes: `Customer: ${manualCustomerName}, Phone: ${manualCustomerPhone}`,
       })
@@ -423,9 +428,15 @@ const CashierClient = () => {
                   color: #0f172a;
                   margin-bottom: 4px;
                 }
+                .visit-again {
+                  font-size: 10px;
+                  color: #94a3b8;
+                  margin-bottom: 2px;
+                }
                 .phone-number {
                   font-size: 10px;
                   color: #94a3b8;
+                  font-weight: 700;
                 }
                 @media print {
                   body {
@@ -476,6 +487,8 @@ const CashierClient = () => {
                   .customer-name { color: black !important; }
                   .customer-phone { color: black !important; }
                   .payment-box { padding: 6px; }
+                  .footer { padding: 12px 16px; }
+                  .thank-you, .visit-again, .phone-number { color: black; }
                 }
               </style>
             </head>
@@ -566,7 +579,8 @@ const CashierClient = () => {
 
                 <div class="footer">
                   <p class="thank-you">✓ Thank You for Your Purchase!</p>
-                  <p class="phone-number">Tel: 0548 048 520</p>
+                  <p class="visit-again">Visit Us Again...!</p>
+                  <p class="phone-number">Tel: 0548 048 520/ 0549 241 991</p>
                 </div>
               </div>
               <script>

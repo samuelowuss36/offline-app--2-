@@ -68,7 +68,7 @@ export default function ReceiptDisplay({
         <div className="bg-gradient-to-r from-[var(--brand-pink-300)] to-white px-4 py-3 border-b border-[var(--brand-pink-300)] print:px-4 print:py-3 print:bg-white print:border-b-0">
           <div className="text-center">
             <p className="text-[10px] text-slate-600 font-semibold uppercase tracking-wider mb-1 print:text-xs print:text-black">Receipt Number</p>
-            <p className="text-xl font-black font-mono text-[var(--brand-pink-600)] tracking-tight print:text-xl print:text-black">{receiptId}</p>
+            <p className="text-xl font-black font-mono text-[var(--brand-pink-600)] tracking-tight print:text-base print:text-black">{receiptId}</p>
           </div>
         </div>
 
@@ -78,16 +78,10 @@ export default function ReceiptDisplay({
             <p className="text-[10px] text-amber-700 font-semibold uppercase tracking-wider mb-1 print:text-xs print:text-black">Customer</p>
             <div className="space-y-1">
               {customerName && (
-                <div className="flex justify-between items-center">
-                  <span className="text-xs text-amber-700 font-medium print:text-xs print:text-black">Name:</span>
-                  <p className="text-sm font-bold text-amber-900 print:text-sm print:text-black">{customerName}</p>
-                </div>
+                <p className="text-sm font-bold text-amber-900 print:text-sm print:text-black">{customerName}</p>
               )}
               {customerPhone && (
-                <div className="flex justify-between items-center">
-                  <span className="text-xs text-amber-700 font-medium print:text-xs print:text-black">Phone:</span>
-                  <p className="text-xs font-mono text-amber-800 print:text-xs print:text-black">{customerPhone}</p>
-                </div>
+                <p className="text-xs font-mono text-amber-800 print:text-xs print:text-black">Tel: {customerPhone}</p>
               )}
             </div>
           </div>
@@ -144,7 +138,7 @@ export default function ReceiptDisplay({
 
         {/* Payment Details */}
         <div className="px-4 py-3 border-b border-slate-200 print:px-4 print:py-3">
-          <div className="grid grid-cols-3 gap-2 print:grid-cols-1">
+          <div className="grid grid-cols-2 gap-2 print:grid-cols-1">
             <div className="bg-[var(--brand-pink-300)] rounded-lg p-2 border border-[var(--brand-pink-300)] print:bg-transparent print:border-none print:p-2">
               <p className="text-[10px] text-slate-600 font-semibold uppercase tracking-wide mb-0.5 print:text-xs print:text-black">{paymentMethod === "Mobile Money" ? "Sent" : "Paid"}</p>
               <p className="text-sm font-black font-mono text-[var(--brand-pink-600)] print:text-sm">GHS {amountReceived.toFixed(2)}</p>
@@ -155,10 +149,10 @@ export default function ReceiptDisplay({
                 <p className="text-sm font-black font-mono text-green-600 print:text-sm">GHS {change.toFixed(2)}</p>
               </div>
             )}
-            <div className={`bg-slate-800 rounded-lg p-2 text-white print:bg-transparent print:text-black print:p-2 ${change > 0 ? "" : "col-span-2"}`}>
-              <p className="text-[10px] font-semibold uppercase tracking-wide mb-0.5 opacity-80 print:text-xs">Method</p>
-              <p className="text-sm font-bold capitalize print:text-sm">{paymentMethod}</p>
-            </div>
+          </div>
+          <div className="bg-slate-800 rounded-lg p-2 text-white print:bg-transparent print:text-black print:p-2 mt-2">
+            <p className="text-[10px] font-semibold uppercase tracking-wide mb-0.5 opacity-80 print:text-xs">Method</p>
+            <p className="text-sm font-bold capitalize print:text-sm">{paymentMethod}</p>
           </div>
         </div>
 
