@@ -13,6 +13,9 @@ if (!fs.existsSync(dbDir)) {
   fs.mkdirSync(dbDir, { recursive: true })
 }
 
+// Set the user data path to ensure IndexedDB persistence
+app.setPath('userData', dbDir)
+
 let server = null
 
 function createWindow() {
