@@ -15,6 +15,7 @@ if (!fs.existsSync(dbDir)) {
 
 // Set the user data path to ensure IndexedDB persistence
 app.setPath('userData', dbDir)
+console.log('>>> User data path set to:', app.getPath('userData'))
 
 let server = null
 
