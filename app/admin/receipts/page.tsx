@@ -84,25 +84,25 @@ export default function ReceiptsPage() {
               * { margin: 0; padding: 0; box-sizing: border-box; }
               body {
                 font-family: 'Segoe UI', Arial, sans-serif;
-                background: white;
+                background: #f5f5f5;
                 padding: 20px;
                 display: flex;
                 justify-content: center;
               }
               .receipt-container {
+                max-width: 400px;
                 width: 100%;
-                max-width: 320px;
                 background: white;
                 border-radius: 16px;
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
                 overflow: hidden;
-                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
               }
               .header {
                 background: linear-gradient(to right, #ec4899, #db2777);
                 color: white;
                 padding: 16px;
                 text-align: center;
-                border-bottom: 2px solid #ec4899;
+                border-bottom: 4px solid #ec4899;
               }
               .logo-container {
                 display: inline-block;
@@ -132,10 +132,10 @@ export default function ReceiptsPage() {
                 font-weight: 600;
               }
               .receipt-id-section {
-                background: linear-gradient(to right, #fce7f3, white);
+                background: linear-gradient(to right, #fbcfe8, white);
                 padding: 12px 16px;
                 text-align: center;
-                border-bottom: 1px solid #fce7f3;
+                border-bottom: 2px solid #fbcfe8;
               }
               .receipt-label {
                 font-size: 10px;
@@ -153,7 +153,7 @@ export default function ReceiptsPage() {
                 letter-spacing: -0.025em;
               }
               .customer-section {
-                padding: 12px 16px;
+                padding: 8px 16px;
                 background: #fef3c7;
                 border-bottom: 1px solid #fcd34d;
               }
@@ -177,7 +177,7 @@ export default function ReceiptsPage() {
                 font-family: monospace;
               }
               .transaction-details {
-                padding: 12px 16px;
+                padding: 8px 16px;
                 border-bottom: 1px solid #e2e8f0;
               }
               .detail-row {
@@ -221,7 +221,7 @@ export default function ReceiptsPage() {
                 font-family: monospace;
                 font-weight: 700;
                 color: #0f172a;
-                margin-left: 8px;
+                margin-left: 6px;
               }
               .item-details {
                 font-size: 10px;
@@ -229,7 +229,7 @@ export default function ReceiptsPage() {
                 margin-top: 2px;
               }
               .totals-section {
-                padding: 12px 16px;
+                padding: 8px 16px;
                 background: #f8fafc;
                 border-bottom: 1px solid #e2e8f0;
               }
@@ -266,7 +266,7 @@ export default function ReceiptsPage() {
                 color: #0f172a;
               }
               .payment-section {
-                padding: 12px 16px;
+                padding: 8px 16px;
                 border-bottom: 1px solid #e2e8f0;
               }
               .payment-grid {
@@ -428,15 +428,20 @@ export default function ReceiptsPage() {
               </div>
 
               <div class="items-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; font-size: 10px; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">
+                  <span style="flex: 1;">Item</span>
+                  <span style="width: 48px; text-align: center;">Qty</span>
+                  <span style="width: 64px; text-align: right;">Price</span>
+                  <span style="width: 64px; text-align: right; margin-left: 6px;">Total</span>
+                </div>
                 ${sale.items
                   .map(
                     (item) => `
-                  <div class="item">
-                    <div class="item-header">
-                      <span class="item-name">${item.productName}</span>
-                      <span class="item-total">GHS ${item.total.toFixed(2)}</span>
-                    </div>
-                    <div class="item-details">${item.quantity} × GHS ${item.price.toFixed(2)}</div>
+                  <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; margin-bottom: 8px;">
+                    <span style="flex: 1; font-weight: 600; color: #0f172a;">${item.productName}</span>
+                    <span style="width: 48px; text-align: center; font-family: monospace; color: #475569;">${item.quantity}</span>
+                    <span style="width: 64px; text-align: right; font-family: monospace; color: #475569;">GHS ${item.price.toFixed(2)}</span>
+                    <span style="width: 64px; text-align: right; font-family: monospace; font-weight: 700; color: #0f172a; margin-left: 6px;">GHS ${item.total.toFixed(2)}</span>
                   </div>
                 `,
                   )

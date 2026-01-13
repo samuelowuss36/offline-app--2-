@@ -45,7 +45,8 @@ const CashierClient = () => {
   useEffect(() => {
     const filtered = products.filter(
       (product) =>
-        product.name.toLowerCase().includes(searchQuery.toLowerCase()) || product.id.toString().includes(searchQuery),
+        product.quantity > 0 && // Only show products with stock > 0
+        (product.name.toLowerCase().includes(searchQuery.toLowerCase()) || product.id.toString().includes(searchQuery)),
     )
     setFilteredProducts(filtered)
   }, [searchQuery, products])
@@ -627,7 +628,7 @@ const CashierClient = () => {
         <Card className="flex flex-col h-full">
           <CardHeader className="flex-shrink-0">
             <CardTitle className="text-lg">Products</CardTitle>
-            <CardDescription>{filteredProducts.length} items available</CardDescription>
+            <CardDescription>{filteredProducts.length} items in stock</CardDescription>
 
             <div className="mt-4 relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
