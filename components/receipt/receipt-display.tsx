@@ -51,8 +51,8 @@ export default function ReceiptDisplay({
   }, [])
 
   return (
-    <div className="w-full flex justify-center p-2 print:p-0">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden print:shadow-none print:rounded-none print:max-w-[80mm] print:w-[80mm] print:mx-auto print:p-2 print:rounded-none print:text-black">
+    <div className="receipt-print w-full flex justify-center p-2 print:p-0">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl overflow-hidden print:shadow-none print:rounded-none print:max-w-[80mm] print:w-[80mm] print:mx-auto print:p-2 print:rounded-none print:text-black font-bold">
         {/* Header with Accent Line */}
         <div className="bg-gradient-to-r from-[var(--brand-pink)] to-[var(--brand-pink-600)] text-white p-4 border-b-2 border-[var(--brand-pink)] print:bg-white print:text-black print:border-b-0 print:p-3">
           <div className="text-center">
