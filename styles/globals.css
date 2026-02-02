@@ -151,3 +151,26 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Receipt visibility: force black and bold on-screen and improve print color-adjust */
+.receipt-print,
+.receipt-print *:not(img) {
+  color: #000 !important;
+  font-weight: 700 !important;
+  -webkit-font-smoothing: antialiased !important;
+}
+
+/* Ensure receipt images remain unchanged */
+.receipt-print img {
+  -webkit-filter: none !important;
+  filter: none !important;
+}
+
+/* Print-specific helpers to preserve colors and weight on printers */
+@media print {
+  .receipt-print,
+  .receipt-print *:not(img) {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}

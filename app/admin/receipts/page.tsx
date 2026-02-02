@@ -89,6 +89,16 @@ export default function ReceiptsPage() {
                 display: flex;
                 justify-content: center;
               }
+
+              /* Force high-contrast, bold text for receipts (on-screen and print) */
+              .receipt-container,
+              .receipt-container *:not(img) {
+                color: #000 !important;
+                font-weight: 700 !important;
+                -webkit-font-smoothing: antialiased !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+              }
               .receipt-container {
                 max-width: 400px;
                 width: 100%;
@@ -332,62 +342,62 @@ export default function ReceiptsPage() {
                 font-weight: 700;
               }
               @media print {
+                /* Ensure page is clean and high-contrast for printers */
+                * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
                 body {
                   background: white;
                   padding: 0;
                 }
                 .receipt-container {
-                  box-shadow: none;
-                  border-radius: 0;
-                  max-width: 80mm;
-                  width: 80mm;
-                  margin: 0 auto;
-                }
-                .header {
+                  box-shadow: none !important;
+                  border-radius: 0 !important;
+                  max-width: 80mm !important;
+                  width: 80mm !important;
+                  margin: 0 auto !important;
                   background: white !important;
-                  color: black !important;
-                  padding: 8px;
-                  border-bottom: none;
+                  color: #000 !important;
                 }
-                .store-name { color: black !important; font-size: 14px; }
-                .subtitle { color: black !important; }
-                .logo-container {
-                  background: transparent;
-                  box-shadow: none;
-                  margin-bottom: 4px;
-                }
-                .logo { width: 32px; height: 32px; }
-                .receipt-id-section {
-                  background: white !important;
-                  padding: 8px 12px;
-                  border-bottom: none;
-                }
-                .receipt-number { font-size: 16px; }
-                .customer-section {
-                  background: white !important;
-                  border-bottom: 1px dashed #ccc;
-                  padding: 8px 12px;
-                }
-                .customer-title { color: black !important; }
-                .customer-name { color: black !important; }
-                .customer-phone { color: black !important; }
+
+                /* Remove all decorative backgrounds and gradients */
+                .header,
+                .receipt-id-section,
                 .customer-section,
                 .transaction-details,
                 .items-section,
                 .totals-section,
                 .payment-section,
-                .footer {
-                  padding: 6px 12px;
+                .footer,
+                .payment-box,
+                .payment-box.pink,
+                .payment-box.green {
+                  background: white !important;
+                  color: #000 !important;
+                  border: none !important;
+                  box-shadow: none !important;
                 }
-                .totals-section { background: white !important; }
-                .payment-box { padding: 6px; }
+
                 .payment-box.dark {
                   background: white !important;
-                  color: black !important;
-                  border: 1px solid #ccc;
+                  color: #000 !important;
+                  border: 1px solid #ccc !important;
                 }
-                .footer { padding: 12px 16px; }
-                .thank-you, .visit-again, .phone-number { color: black; }
+
+                .logo-container { background: transparent !important; box-shadow: none !important; margin-bottom: 4px !important; }
+                .logo { width: 32px; height: 32px; }
+                .receipt-number { font-size: 16px; }
+
+                /* Text colors and weights */
+                .store-name { color: black !important; font-size: 14px !important; }
+                .subtitle { color: black !important; }
+                .customer-title, .customer-name, .customer-phone, .detail-label, .detail-value, .item-name, .item-total, .total-label, .total-value, .thank-you, .visit-again, .phone-number {
+                  color: #000 !important;
+                  font-weight: 700 !important;
+                }
+
+                /* Spacing adjustments for print */
+                .customer-section, .transaction-details, .items-section, .totals-section, .payment-section, .footer {
+                  padding: 6px 12px !important;
+                }
               }
             </style>
           </head>
